@@ -24,15 +24,16 @@ import 'package:sqflite/sqflite.dart';          // fixCombo (16 feb 2019): new v
 class AmparoPage extends StatefulWidget {
 
   Amparo actual;
-  AmparoPage({Key key, @required this.actual}) : super(
-      key: key); // Manejo DB - Recibe en actual=datos(update) o actual=null(insert)
+  int polizaActual;
+  AmparoPage({@required this.actual, @required this.polizaActual }); // Manejo DB - Recibe en actual=datos(update) o actual=null(insert)
 
   @override
   _AmparoPageState createState() => _AmparoPageState();
 }
 
-class _AmparoPageState extends State<AmparoPage> {
+  class _AmparoPageState extends State<AmparoPage> {
 
+  get polizaActual => null;
   //   'amparo ,orden ,poliza
   //   concepto ,fechaInicial ,fechaFinal, dias
   //   porcentaje ,valorAsegurado ,tasaAmparo ,prima
@@ -78,7 +79,10 @@ class _AmparoPageState extends State<AmparoPage> {
 
       _amparo = 0;
       _orden  = 1;
-      _poliza.text = '1';
+
+
+      print('aqu es :' + this.widget.polizaActual.toString());
+      _poliza.text = this.widget.polizaActual.toString();
 
       fechaInicial = DateTime.now();
       fechaFinal = DateTime.now();
@@ -118,6 +122,7 @@ class _AmparoPageState extends State<AmparoPage> {
     }
 
     Widget datosIdentificacion = ExpansionTile(
+
       initiallyExpanded: true,
       title: Text(
         "Identificación",
@@ -125,17 +130,14 @@ class _AmparoPageState extends State<AmparoPage> {
       ),
       children: <Widget>[
 
-        TextFormField(
+        TextField(
+          enabled: false,
           controller: _poliza,
           decoration: const InputDecoration(
             icon: const Icon(Icons.list ),
             hintText: 'Número de póliza',
             labelText: 'Número de póliza',
           ),
-          keyboardType: TextInputType.phone,
-          inputFormatters: [
-            WhitelistingTextInputFormatter.digitsOnly,
-          ],
         ),
 
       ],
