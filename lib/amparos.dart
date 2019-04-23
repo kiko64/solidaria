@@ -5,19 +5,21 @@ import 'amparo.dart';                    // (Verificar)
 
 class AmparoList extends StatefulWidget {
 
-  int actualPoliza;
-  AmparoList( @required this.actualPoliza ); // Manejo DB - Recibe en actualPoliza=datos(update) o actualPoliza=null(insert)
+  int polizaActual;
+  AmparoList( @required this.polizaActual ); // Manejo DB - Recibe en actualPoliza=datos(update) o actualPoliza=null(insert)
 
   @override
   _AmparoListState createState() => _AmparoListState();
 }
 
 class _AmparoListState extends State<AmparoList> {
+  get polizaActual => null;
+
 
   @override
   Widget build(BuildContext context) {
 
-    final bloc = AmparoBloc( this.widget.actualPoliza );  //new separate
+    final bloc = AmparoBloc( this.widget.polizaActual );  //new separate
     TextEditingController busqueda = TextEditingController();
 
     @override
@@ -104,7 +106,7 @@ class _AmparoListState extends State<AmparoList> {
                                 Navigator.push(                           // Manejo DB Actualizar
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AmparoPage(actual: item)
+                                        builder: (context) => AmparoPage(actual: item, polizaActual: this.widget.polizaActual )
                                     )
                                 );
                               },
@@ -155,7 +157,7 @@ class _AmparoListState extends State<AmparoList> {
                 onPressed: () async {
                   Navigator.push( context,
                       new MaterialPageRoute(
-                          builder: (context) => new AmparoPage()    // Manejo DB Adicionar Actividad (Verificar)
+                          builder: (context) => AmparoPage(actual: null, polizaActual: this.widget.polizaActual )    // Manejo DB Adicionar Actividad (Verificar)
                       )
                   );
                 },
