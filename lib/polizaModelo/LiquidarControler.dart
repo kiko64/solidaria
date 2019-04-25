@@ -31,6 +31,8 @@ class DBLiquidador {
 
   static int orden = 1;
   static String sentencia='';
+  static int conceptoPrincipal = 0;
+
 
   static quitarPunto( String cadena, String buscar ) {
     if (cadena.indexOf(buscar)!=-1)
@@ -82,10 +84,10 @@ class DBLiquidador {
       if ( concepto >= 10050 && concepto <= 10059 ) {
         sentencia =
             'insert into amparo ( orden ,poliza ,concepto ,dias ,fechaInicial ,fechaFinal ,porcentaje ,valorAsegurado ,tasaAmparo ,prima ) values (' +
-                orden.toString() + ', ' + // orden
-                args[1] + ', ' + // poliza
-                concepto.toString() + ', ' + // concepto
-                valores[parametros[72]].toString() + ', ' + // dias
+                orden.toString() + ', ' +                                                   // orden
+                args[1] + ', ' +                                                            // poliza
+                concepto.toString() + ', ' +                                                // concepto
+                valores[parametros[72]].toString() + ', ' +                                 // dias
 
                 "'" + valores[parametros[70]].toString().substring(0 , 4) +                 // Año
                 '-' + valores[parametros[71]].toString().substring(4 , 6).padLeft(2,'0') +  // Mes
@@ -100,61 +102,61 @@ class DBLiquidador {
                 quitarPunto(valores[202].toString() , '.').padLeft(2,'0')+ ':00' +          // Minutos y segundos
                 "', " +                                                                     // => fechaFinal
 
-                valores[parametros[79]].toString() + ', ' +         // tasa
-                valores[parametros[80]].round().toString() + ', ' + // base
-                valores[parametros[81]].toString() + ', ' +         // tarifa
-                valores[parametros[82]].round().toString() + ' )';  // valor , 0, 0
+                valores[parametros[79]].toString() + ', ' +                                 // pordentajeAsegurado
+                valores[parametros[80]].round().toString() + ', ' +                         // valorAsegurable
+                valores[parametros[81]].toString() + ', ' +                                 // tasaAmparo
+                valores[parametros[82]].round().toString() + ' )';                          // prima , 0, 0
       }
       else
       if ( concepto >= 10400 && concepto <= 10408 ) {
         sentencia =
             'insert into amparo ( orden ,poliza ,concepto ,dias ,fechaInicial ,fechaFinal ,porcentaje ,valorAsegurado ,tasaAmparo ,prima ) values (' +
-                orden.toString() + ', ' + // orden
-                args[1] + ', ' + // poliza
-                concepto.toString() + ', ' + // concepto
+                orden.toString() + ', ' +                                                   // orden
+                args[1] + ', ' +                                                            // poliza
+                concepto.toString() + ', ' +                                                // concepto
                 valores[parametros[72]].toString() + ', ' + // dias
                 "'" + valores[parametros[70]].toString().substring(0 , 4) +
                 '-' + valores[parametros[71]].toString().substring(4 , 6).padLeft(2,'0') +
                 '-' + valores[parametros[71]].toString().substring(6 , 8).padLeft(2,'0') +
                 ' ' + quitarPunto(valores[201].toString() , '.').padLeft(2,'0') + ':' +
                 quitarPunto(valores[202].toString() , '.').padLeft(2,'0') + ':00' +
-                "', " + // fechaInicial
+                "', " +                                                                     // fechaInicial
                 "'" + valores[parametros[71]].toString().substring(0 , 4) +
                 '-' + valores[parametros[71]].toString().substring(4 , 6).padLeft(2,'0')+
                 '-' + valores[parametros[71]].toString().substring(6 , 8).padLeft(2,'0') +
                 ' ' + quitarPunto(valores[201].toString() , '.').padLeft(2,'0') + ':' +
                 quitarPunto(valores[202].toString() , '.').padLeft(2,'0') + ':00' +
-                "', " + // fechaFinal
-                '0, ' +                                         // tasa
-                '0, ' +                                         // base
-                valores[10].toString() + ', ' +           // tarifa
-                valores[400].round().toString() + ' )';   // valor , 0, 0
+                "', " +                                                                     // fechaFinal
+                '0, ' +                                                                     // tasa
+                '0, ' +                                                                     // base
+                valores[10].toString() + ', ' +                                             // tarifa
+                valores[400].round().toString() + ' )';                                     // valor , 0, 0
 
       }
       else {
         sentencia =
             'insert into amparo ( orden ,poliza ,concepto ,dias ,fechaInicial ,fechaFinal ,porcentaje ,valorAsegurado ,tasaAmparo ,prima ) values (' +
 
-                orden.toString() + ', ' + // orden
-                args[1] + ', ' + // poliza
-                concepto.toString() + ', ' + // concepto
-                valores[parametros[72]].toString() + ', ' + // dias
+                orden.toString() + ', ' +                                                   // orden
+                args[1] + ', ' +                                                            // poliza
+                concepto.toString() + ', ' +                                                // concepto
+                valores[parametros[72]].toString() + ', ' +                                 // dias
                 "'" + valores[parametros[70]].toString().substring(0 , 4) +
                 '-' + valores[parametros[71]].toString().substring(4 , 6).padLeft(2,'0') +
                 '-' + valores[parametros[71]].toString().substring(6 , 8).padLeft(2,'0') +
                 ' ' + quitarPunto(valores[201].toString() , '.').padLeft(2,'0') + ':' +
                 quitarPunto(valores[202].toString() , '.').padLeft(2,'0') + ':00' +
-                "', " + // fechaInicial
+                "', " +                                                                   // fechaInicial
                 "'" + valores[parametros[71]].toString().substring(0 , 4) +
                 '-' + valores[parametros[71]].toString().substring(4 , 6).padLeft(2,'0') +
                 '-' + valores[parametros[71]].toString().substring(6 , 8).padLeft(2,'0') +
                 ' ' + quitarPunto(valores[201].toString() , '.').padLeft(2,'0') + ':' +
                 quitarPunto(valores[202].toString() , '.').padLeft(2,'0') + ':00' +
-                "', " + // fechaFinal
-                '19, ' +                                  // porcentaje
-                '0, ' +                                   // valorAsegurado
-                '0, ' +                                   // tasaAmparo
-                valores[410].round().toString() + ' )';   // prima , 0, 0
+                "', " +                                                                   // fechaFinal
+                '19, ' +                                                                  // porcentaje
+                '0, ' +                                                                   // valorAsegurado
+                '0, ' +                                                                   // tasaAmparo
+                valores[410].round().toString() + ' )';                                   // prima , 0, 0
       }
 
     }
@@ -174,6 +176,9 @@ class DBLiquidador {
 
 
   static cargarParametros(String sentencia) async {
+
+//    print ('cargarParametros: '+sentencia);  // trace
+
     final db = await database;
     var consultaP = await db.rawQuery(sentencia);                // Crear Cursor para sacar los Datos básicos
     try {
@@ -186,6 +191,9 @@ class DBLiquidador {
   }
 
   static cargarContadores( String sentencia ) async {
+
+//    print ('cargarContadores: '+sentencia);  // trace
+
     final db = await database;
     var consultaC = await db.rawQuery( sentencia );            // Crear Cursor para Grabar los Datos básicos
     try {
@@ -198,6 +206,9 @@ class DBLiquidador {
   }
 
   static cargarValores(String sentencia) async {
+
+//    print ('cargarValores: '+sentencia);  // trace
+
     final db = await database;
     var consultaV = await db.rawQuery(sentencia);
     try {
@@ -248,14 +259,14 @@ class DBLiquidador {
     }
   }
 
-  static double funcion( String formula, String clase ) {                        // Resolver_funciones de fechas simple
+  static double funcion( String formula, String clase, int concepto ) {   // Resolver_funciones de fechas simple
     int i = 0;
     int j = 0;
     String n1;
     String n2;
     String simbolo;
 
-    String funcion = formula.substring(1,4);                // [000]C002-C049
+    String funcion = formula.substring(1,4);                // 000 <- [000]C002-C049
     formula = formula.substring(5,formula.length );         // C002-C049
 
     while( formula.indexOf('C') !=- 1 ) {                   // 20190429-21
@@ -264,10 +275,17 @@ class DBLiquidador {
 
       formula=formula.substring(0,i) + valores[j].toString() + formula.substring(i+4,formula.length );
     }
-    n1=quitarPunto( formula.substring( 0, i-1 ), '.' );               // 20190429
-    simbolo=quitarPunto( formula.substring( i-1, i ), '.' );          // -
-    n2=quitarPunto( formula.substring( i, formula.length ), '.' );    // 21
 
+    if ( i!=0 ) {                                                   // Dos parametros
+      n1 = quitarPunto(formula.substring(0 , i - 1) , '.');         // 20190429
+      simbolo = quitarPunto(formula.substring(i - 1 , i) , '.');    // -
+      n2 = quitarPunto(formula.substring(i , formula.length) , '.');// 21
+    }
+    else {                                                          // Un solo parametro
+      n1 = quitarPunto(formula , '.');                              // 20190429
+      simbolo = '+'; // -
+      n2 = '0'; // 21
+    }
     switch( funcion ) {                                                     // Sumarle o restarle dias a una fecha
       case '000' : {
         var fecha     = DateTime.parse(n1.substring(0,8)+' 00:00:00Z');     // fecha <-- 20190429
@@ -277,11 +295,18 @@ class DBLiquidador {
         print(clase+' función: ['+funcion+']'+formula+') ==>> '+fechaInt.toString() );
         return double.parse(fechaInt);
       }
-      case '001' : {                                                        // Sumarle años a una fecha
-        int ano =int.parse(n1.substring(0,4)) + int.parse(n2);              // ano <-- 2019+1
-
-        print(clase+' función: ['+funcion+']'+formula+') ==>> '+double.parse(ano.toString()+n1.substring(4,n1.length)).toString() );
-        return double.parse(ano.toString()+n1.substring(4,n1.length));      // 20200429 <-- ano+0429
+      case '001' : {                                                        // fechaFinalAmparo = Sumarle años a una fecha
+        double valor;
+        if ( valores[100]==1 ) {                                            // Maroma: Si el periodo=1 retorna la fechaFinalContrato
+          valor = valores[22];
+          print(clase+' función: ['+funcion+']'+formula+') ==>> '+valor.toString() );
+        }
+        else {
+          int ano =int.parse(n1.substring(0,4)) + int.parse(n2);            // ano <-- 2019+1
+          print(clase+' función: ['+funcion+']'+formula+') ==>> '+double.parse(ano.toString()+n1.substring(4,n1.length)).toString() );
+          valor= double.parse(ano.toString()+n1.substring(4,n1.length));    // 20200429 <-- ano+0429
+        }
+        return valor;
       }
       case '002' : {                                                        // Restarle años a una fecha
         int ano =int.parse(n1.substring(0,4))-int.parse(n2);                // ano <-- 2019+1
@@ -290,6 +315,7 @@ class DBLiquidador {
         return double.parse(ano.toString()+n1.substring(4,n1.length));      // 20200429 <-- ano+0429
       }
       case '003' : {                                                        // Diferencia de días entre fechas
+        print(clase+' función: ['+funcion+']'+formula+') ==>> '+n1.toString() +', '+n2.toString());
         var inicio    = DateTime.parse(n1.substring(0,8)+' 00:00:00Z');     // fecha <-- 20190429
         var fin       = DateTime.parse(n2.substring(0,8)+' 00:00:00Z');     // fecha <-- 20190429
         var diff = inicio.difference(fin);                                  // Días de diferencia
@@ -299,6 +325,22 @@ class DBLiquidador {
 //        diff.inHours; // => 177987
 //        diff.inMinutes; // => 10679261
       }
+      case '004' : {                                                        // fechaInicialAmparo = dependiendo del amparo
+        double valor = valores[21];                                         // <- fechaInicialContrato
+//        if ( concepto == 10053 ) {                                        // Estabilidad de la obra
+//          valor = valores[22];
+//          print(clase+' función: ['+funcion+']'+formula+') ==>> '+valor.toString() );
+//        }
+//        else
+          if ( conceptoPrincipal == 10055 ) {                               // Seriedad de la oferta
+            var fecha     = DateTime.parse(valores[22].toString().substring(0,8)+' 00:00:00Z');     // fechaFinalContrato <-- 20190429
+            var resultado = fecha.add(Duration(days: 1 ) );                 // Sumarle o restarle los días a la fecha
+            String fechaInt ="${resultado.year.toString()}${resultado.month.toString().padLeft(2,'0')}${resultado.day.toString().padLeft(2,'0')}";
+            valor = double.parse(fechaInt);
+          }
+        return valor;
+      }
+
       default  : { return  0 ;}
     }
   }
@@ -315,10 +357,11 @@ class DBLiquidador {
     if( debito.length > 0 ) {
       switch ( simbolo ) {
         case '[F]' : {
-          valorDB = funcion( debito.substring( 3 , debito.length), '['+clase+']'+'['+concepto.toString()+']' );
+          valorDB = funcion( debito.substring( 3 , debito.length), '['+clase+']'+'['+concepto.toString()+']', concepto );
           break;
         }
         case '[C]' : {
+          conceptoPrincipal = concepto;
           List lista = debito.substring( 3 , debito.length).split(",");
           for (int i=0; i<lista.length; i++) {
             await recorrer( lista[i] );
@@ -336,7 +379,7 @@ class DBLiquidador {
     if( credito.length > 0 ) {
       switch ( simbolo ) {
         case '[F]' : {
-          valorCR = funcion( credito.substring( 3 , credito.length), clase );
+          valorCR = funcion( credito.substring( 3 , credito.length), '['+clase+']'+'['+credito.toString()+']', concepto );
           break;
         }
         case '[C]' : {
@@ -364,7 +407,6 @@ class DBLiquidador {
     sentencia =
       'SELECT concepto, valor FROM valor '+
       'WHERE clase = '+clase+' GROUP BY concepto HAVING COUNT(*) = 1';
-    print ('cargarValores: '+sentencia);
     await cargarValores( sentencia );                               // Subir valor General por clase
 
     sentencia =
@@ -382,7 +424,6 @@ class DBLiquidador {
           sentencia = 'SELECT '+args[7]+' as concepto, valor FROM valor WHERE clase = '+clase+' AND minimo = '+rs.concepto.toString();
         else
           sentencia = 'SELECT concepto, valor FROM valor WHERE clase = '+clase+' AND minimo = '+rs.concepto.toString();
-        print ('cargarValores: '+sentencia);
         await cargarValores( sentencia );
 
         if ( entro ) {
@@ -422,6 +463,8 @@ class DBLiquidador {
 
     inicializarArreglo();
 
+    valores[365]=365;
+
     args[1] = id;                                               // id Principal en este caso de la póliza
     args[2] = clase;                                            // Clase
     args[3] = crud;                                             // Crud
@@ -434,13 +477,11 @@ class DBLiquidador {
       'SELECT cn.concepto, rg.parametro0 AS parametro '
       'FROM concepto cn, g_registro rg '+
       'WHERE cn.parametro = rg.registro AND cn.concepto BETWEEN '+args[5]+' AND '+args[5].substring(0, 2)+'999 AND cn.parametro != 4';
-    print ('cargarParametros: '+sentencia);  // trace
     await cargarParametros( sentencia );                              // Subir parametros de conceptos
 
     sentencia =
       'select distinct concepto, contador FROM formula '+
       'WHERE indicador = 38 AND concepto BETWEEN '+args[5]+' AND '+args[5].substring(0, 2)+'999';
-    print ('cargarContadores: '+sentencia);  // trace
     await cargarContadores( sentencia );                              // Subir contadores de Conceptos
 
     sentencia=
@@ -468,7 +509,6 @@ class DBLiquidador {
       'from  poliza '+
       'where poliza = '+args[1];
 
-    print ('cargarValor: '+sentencia);  // trace
     await cargarValores( sentencia );                                 // Subir póliza
 
     sentencia=
@@ -496,18 +536,15 @@ class DBLiquidador {
       'from  poliza '+
       'where poliza = '+args[1];
 
-    print ('cargarValor: '+sentencia);  // trace
     await cargarValores( sentencia );                                 // Cargar datos
 
     sentencia = "delete from amparo where concepto between 10400 and 10410 and poliza = "+args[1];
     await db.execute(sentencia);
-    print ('execute: '+sentencia);  // trace
 
     sentencia =
     "select 10390 as concepto, ifnull(sum(prima),0)*1.0  as valor from amparo where poliza = "+args[1]+ " union "
     "select 10391 as concepto, ifnull(sum(prima),0)*1.0  as valor from amparo where poliza = "+args[1];
     await cargarValores( sentencia );                                 // Cargar datos
-    print ('cargarValores: '+sentencia);  // trace
 
     orden = 1;
     var consulta = await db.rawQuery("select ifnull(max(orden)+1,1) as id from amparo where poliza = "+args[1] );
