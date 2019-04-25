@@ -112,8 +112,8 @@ class _PolizaPageState extends State<PolizaPage> {
 
   var _periodoEmision    = TextEditingController();
   var _retroactividad    = TextEditingController();
-  DateTime fechaHoraInicial = new DateTime.now();
-  DateTime fechaHoraFinal   = new DateTime.now();
+  DateTime fechaHoraInicial = DateTime.now();
+  DateTime fechaHoraFinal   = DateTime.now();
 
   // contratante NEW
   // objeto
@@ -145,6 +145,26 @@ class _PolizaPageState extends State<PolizaPage> {
 
   InputType inputType = InputType.date;
   bool editable = false;
+
+  void _actualizarFecha() {
+
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      int ano = fechaInicial.year;
+      ano = ano +  int.parse(_periodo.text);
+
+//
+
+      fechaFinal = DateTime.parse(
+        ano.toString()+'-'+
+        fechaInicial.month.toString().padLeft(2,'0')+'-'+
+        fechaInicial.day.toString().padLeft(2,'0')+' 00:00:00.000');
+    });
+  }
 
   @override
   void initState() {
@@ -283,24 +303,6 @@ class _PolizaPageState extends State<PolizaPage> {
               labelText: 'Fecha emisión'),
           onChanged: (dt) => setState(() => fechaEmision = dt),
         ),// FechaEmisión
-
-        new TextFormField(
-          controller: _periodo,
-          decoration: const InputDecoration(
-            hintText: 'Entre el periodo',
-            labelText: 'Periodo',
-          ),
-          focusNode: _periodoFocus,
-          textInputAction: TextInputAction.next,
-          onFieldSubmitted: (term) {
-            _numeroFocus.unfocus();
-            FocusScope.of(context).requestFocus(_numeroFocus);
-          },
-          keyboardType: TextInputType.phone,
-          inputFormatters: [
-            WhitelistingTextInputFormatter.digitsOnly,
-          ],
-        ),// Periodo
 
         new TextFormField(
           controller: _numero,
@@ -661,11 +663,35 @@ class _PolizaPageState extends State<PolizaPage> {
             labelText: 'Valor contrato',
           ),
           focusNode: _valorContratoFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (term) {
+            _retroactividadFocus.unfocus();
+            FocusScope.of(context).requestFocus(_periodoFocus);
+          },
           keyboardType: TextInputType.phone,
           inputFormatters: [
             WhitelistingTextInputFormatter.digitsOnly,
           ],
         ),// valorContrato
+
+        new TextFormField(
+          controller: _periodo,
+          decoration: const InputDecoration(
+            icon: const Icon(Icons.build),
+            hintText: 'Entre el periodo',
+            labelText: 'Periodo',
+          ),
+          focusNode: _periodoFocus,
+          onFieldSubmitted: (_) {
+            _periodoFocus.unfocus();
+            _actualizarFecha();
+          },
+
+          keyboardType: TextInputType.phone,
+          inputFormatters: [
+            WhitelistingTextInputFormatter.digitsOnly,
+          ],
+        ),// Periodo
 
         DateTimePickerFormField(
           inputType: inputType,
@@ -684,9 +710,14 @@ class _PolizaPageState extends State<PolizaPage> {
           editable: editable,
           initialValue: fechaFinal,
           decoration: InputDecoration(
-              icon: const Icon(Icons.date_range),
-              labelText: 'Fecha final'),
+            icon: const Icon(Icons.date_range),
+            labelText: 'Fecha final'),
           onChanged: (dt) => setState(() => fechaFinal = dt),
+        ),
+
+        Text(
+          '$fechaFinal',
+          style: Theme.of(context).textTheme.display1,
         ),
 
       ],
