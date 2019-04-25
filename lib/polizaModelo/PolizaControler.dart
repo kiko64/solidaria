@@ -94,7 +94,7 @@ class DBPoliza {
     int id = consulta.first["id"];
     print('Última poliza: '+id.toString());
 
-    nuevoAmparo( id.toString(), registro.objeto.toString(), "I", registro.afianzado.toString(), '' );
+    await nuevoAmparo( id.toString(), registro.objeto.toString(), "I", registro.afianzado.toString(), '' );
 
     return crud;
   }
