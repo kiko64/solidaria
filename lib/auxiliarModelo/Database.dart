@@ -23,14 +23,14 @@ class DBProvider {
   }
 
 //  factory DBProvider() => db;
-  factory DBProvider() {                      // fixCombo (16 feb 2019): new factory para el combo, diferente forma de relacionar el db
+  factory DBProvider() {                                       // fixCombo (16 feb 2019): new factory para el combo, diferente forma de relacionar el db
     if(db == null) {
       db = DBProvider._();
     }
     return db;
   }
 
-  Future<List<Map<String, dynamic>>> getGeneroMapList() async {  // fixCombo (16 feb 2019): gets all generos from database
+  Future<List<Map<String, dynamic>>> getGeneroMapList() async {// fixCombo (16 feb 2019): gets all generos from database
     Database db = await this.database;
     var result = await db.rawQuery('select registro, descripcion from g_registro where tabla = 211 order by registro');
     return result;
@@ -45,6 +45,87 @@ class DBProvider {
     }
     return generoList;
   }
+
+  Future<List<Map<String, dynamic>>> getEstadoCivilMapList() async {// fixCombo (16 feb 2019): gets all estadoCiviles from database
+    Database db = await this.database;
+    var result = await db.rawQuery('select registro, descripcion from g_registro where tabla = 1005 order by registro');
+    return result;
+  }
+
+  Future<List<EstadoCivil>> getEstadoCivilList() async {                 // fixCombo (16 feb 2019): gets all estadoCiviles from database => memory (estadoCivilList)
+    var estadoCivilMapList = await getEstadoCivilMapList();
+    int count = estadoCivilMapList.length;
+    List<EstadoCivil> estadoCivilList = List<EstadoCivil>();
+    for(int i = 0; i < count; i++) {
+      estadoCivilList.add(EstadoCivil.fromMapObject(estadoCivilMapList[i]));
+    }
+    return estadoCivilList;
+  }
+
+  Future<List<Map<String, dynamic>>> getTipoMapList() async {// fixCombo (16 feb 2019): gets all tipos from database
+    Database db = await this.database;
+    var result = await db.rawQuery('select registro, descripcion from g_registro where tabla = 1002 order by registro');
+    return result;
+  }
+
+  Future<List<Tipo>> getTipoList() async {                 // fixCombo (16 feb 2019): gets all tipos from database => memory (tipoList)
+    var tipoMapList = await getTipoMapList();
+    int count = tipoMapList.length;
+    List<Tipo> tipoList = List<Tipo>();
+    for(int i = 0; i < count; i++) {
+      tipoList.add(Tipo.fromMapObject(tipoMapList[i]));
+    }
+    return tipoList;
+  }
+
+  Future<List<Map<String, dynamic>>> getClasificacionMapList() async {// fixCombo (16 feb 2019): gets all clasificaciones from database
+    Database db = await this.database;
+    var result = await db.rawQuery('select registro, descripcion from g_registro where tabla = 1004 order by registro');
+    return result;
+  }
+
+  Future<List<Clasificacion>> getClasificacionList() async {                 // fixCombo (16 feb 2019): gets all clasificaciones from database => memory (clasificacionList)
+    var clasificacionMapList = await getClasificacionMapList();
+    int count = clasificacionMapList.length;
+    List<Clasificacion> clasificacionList = List<Clasificacion>();
+    for(int i = 0; i < count; i++) {
+      clasificacionList.add(Clasificacion.fromMapObject(clasificacionMapList[i]));
+    }
+    return clasificacionList;
+  }
+
+  Future<List<Map<String, dynamic>>> getLugarMapList() async {// fixCombo (16 feb 2019): gets all lugares from database
+    Database db = await this.database;
+    var result = await db.rawQuery('select registro, descripcion from g_registro where tabla = 218 order by registro');
+    return result;
+  }
+
+  Future<List<Lugar>> getLugarList() async {                 // fixCombo (16 feb 2019): gets all lugares from database => memory (lugarList)
+    var lugarMapList = await getLugarMapList();
+    int count = lugarMapList.length;
+    List<Lugar> lugarList = List<Lugar>();
+    for(int i = 0; i < count; i++) {
+      lugarList.add(Lugar.fromMapObject(lugarMapList[i]));
+    }
+    return lugarList;
+  }
+
+  Future<List<Map<String, dynamic>>> getMunicipioMapList() async {// fixCombo (16 feb 2019): gets all municipios from database
+    Database db = await this.database;
+    var result = await db.rawQuery('select registro, descripcion from g_registro where tabla = 218 order by registro');
+    return result;
+  }
+
+  Future<List<Municipio>> getMunicipioList() async {                 // fixCombo (16 feb 2019): gets all municipios from database => memory (municipioList)
+    var municipioMapList = await getMunicipioMapList();
+    int count = municipioMapList.length;
+    List<Municipio> municipioList = List<Municipio>();
+    for(int i = 0; i < count; i++) {
+      municipioList.add(Municipio.fromMapObject(municipioMapList[i]));
+    }
+    return municipioList;
+  }
+
 
   Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -63,7 +144,7 @@ class DBProvider {
             "parametro1 text default null,"
             "parametro2 text default null,"
             "parametro3 text default null,"
-            "parametro_4 text default null )"
+            "parametro4 text default null )"
           );
 
           await db.execute(
@@ -350,6 +431,7 @@ class DBProvider {
 
           await db.execute(
             "insert into g_registro (registro, tabla, parametro0, descripcion, parametro1,  parametro2,  parametro3) values"
+            "(-2, 1000, -2, 'n/a', '', '',           'X'),"   // -1 NO/APLICA
             "(-1, 1000, -1, 'Eliminado', '', '',     'X'),"   // -1 auxiliar.sincronizar   y  g_perfil.estado
             "(0,  1000, 0,  'Desactivado', '', '',   'R'),"   // 0
             "(1,  1000, 1,  'Activo', '', '',        'R'),"   // 1
@@ -418,27 +500,24 @@ class DBProvider {
             "(121, '', 'Póliza', '' ,'' ,''),"                // 46
             "(121, '', ' ', '' ,'' ,''),"                     // 47
 
-            "(211, 21101, 'Masculino', ' ', ' ', '0'),"       // 48 g_auxiliar.genero
-            "(211, 21102, 'Femenino', ' ', ' ',  '0'),"       // 48
-            "(211, 21199, 'n/a', ' ', ' ',       '0'),"       // 50
+            "(211, 1, 'Masculino', ' ', ' ', '0'),"           // 48 g_auxiliar.genero
+            "(211, 1, 'Femenino', ' ', ' ',  '0'),"           // 48
 
-            "(1002, '', 'Persona jurídica', '' ,''      ,''),"//  g_auxiliar.clasificacion
-            "(1002, '', 'Persona natural', '' ,''       ,''),"
-            "(1002, '', 'Consorcio', '' ,''             ,''),"
-            "(1002, '', 'Unión Temporal', '' ,''        ,''),"
-            "(1002, '', 'Cooperativa', '' ,''           ,''),"
-            "(1002, '', 'PreCooperativa', '' ,''        ,''),"
-            "(1002, '', 'Asociación', '' ,''            ,''),"
-            "(1002, '', 'n/a', '' ,''                   ,''),"
+            "(1002, '1', 'Cédula de ciudadanía', '' ,''  ,''),"  //  g_auxiliar.tipo
+            "(1002, '1', 'Nit Persona natural', '' ,''   ,''),"
+            "(1002, '1', 'Cédula de extranjería', '' ,'' ,''),"
+            "(1002, '2', 'Nit', '' ,''                   ,''),"
 
-            "(1004, '', 'Nit', '' ,''                   ,''),"//  g_auxiliar.identificacion
-            "(1004, '', 'Nit Persona natural', '' ,''   ,''),"
-            "(1004, '', 'Cédula de ciudadanía', '' ,''  ,''),"
-            "(1004, '', 'Cédula de extranjería', '' ,'' ,''),"
+            "(1004, '1', 'Persona natural', '' ,''        ,''),"  //  g_auxiliar.clasificacion
+            "(1004, '2', 'Persona jurídica', '' ,''       ,''),"
+            "(1004, '2', 'Consorcio', '' ,''             ,''),"
+            "(1004, '2', 'Unión Temporal', '' ,''        ,''),"
+            "(1004, '2', 'Cooperativa', '' ,''           ,''),"
+            "(1004, '2', 'PreCooperativa', '' ,''        ,''),"
+            "(1004, '2', 'Asociación', '' ,''            ,''),"
 
-            "(1005, '', 'Soltero', '' ,''               ,''),"//  g_auxiliar.estadoCivil
-            "(1005, '', 'Casado', '' ,''                ,''),"
-            "(1005, '', 'n/a', '' ,''                   ,''),"
+            "(1005, '1', 'Soltero', '' ,''               ,''),"//  g_auxiliar.estadoCivil
+            "(1005, '1', 'Casado', '' ,''                ,''),"
 
             "(1008, '', 'Expedición', '' ,''            ,''),"//  endoso.tipoMovimiento
             "(1008, '', 'Modificacion', '' ,''          ,''),"
@@ -1665,6 +1744,7 @@ class DBProvider {
             "( 10057, 'Calidad del servicio'      ,18,	4,	19 ,0),"
             "( 10058, 'Provisión de repuestos'    ,18,	4,	19 ,0),"
 
+            "( 10099, 'Amparo actual'             ,17,	4,	22 ,0),"
             "( 10100, 'Periodo amparo'            ,17,	4,	22 ,0),"
             "( 10101, 'Tasa amparo'               ,17, 16,	29 ,0),"
             "( 10102, 'Porcentaje asegurable'     ,17, 14,	29 ,0),"
@@ -1677,6 +1757,9 @@ class DBProvider {
             "( 10206, 'Hora final amparo'         ,17,	4,	24 ,0),"
             "( 10207, 'Minutos final amparo'      ,17,	4,	25 ,0),"
             "( 10210, 'Días amparo'               ,17,	7,	20 ,0),"
+            "( 10211, 'Prorrata'                  ,17,	7,	20 ,0),"
+            "( 10212, 'Prima anual'               ,17,	7,	20 ,0),"
+
             "( 10300, 'Valor asegurado'           ,17, 15,	27 ,0),"
             "( 10301, 'Prima'                     ,17, 32,	27 ,0),"
             "( 10390 ,'Sumatoria asegurado'       ,17,  4,  27 ,0),"
@@ -1714,7 +1797,7 @@ class DBProvider {
             "insert into formula ( clase, orden, concepto, debito, credito, contador, cantidad, sentencia, indicador ) values "
 
 //            "( 10001 ,1 ,10200 ,'[F][000]C021-C002',' ',' ',10000 ,''  ,35 ),"
-            "( 10001 ,1 ,10200 ,'C021'            ,' ',' ',10000  ,'' ,35 ),"
+            "( 10001 ,1 ,10200 ,'[F][004]C021'    ,' ',' ' ,10000 ,'' ,35 ),"
             "( 10001 ,2 ,10201 ,'C004'            ,' ',' ' ,10000 ,'' ,35 ),"
             "( 10001 ,3 ,10202 ,'C005'	          ,' ',' ' ,10000 ,'' ,35 ),"
 
@@ -1723,10 +1806,12 @@ class DBProvider {
             "( 10002 ,3 ,10207 ,'C005'	         ,' ' ,' ' ,10000 ,'' ,35 ),"
             "( 10002 ,4 ,10210 ,'[F][003]C205-C200',' ',' ',10000 ,'' ,35 ),"
 
-            "( 10003 ,1 ,10300 ,'C020*C102'	     ,' ' ,'0' ,10000 ,'' ,35 ),"
-            "( 10003 ,2 ,10301 ,'C300*C101'	     ,' ' ,'1' ,10101 ,'' ,35 ),"
-            "( 10003 ,3 ,10390 ,' '              ,' ' ,'0' ,10000 ,'' ,38 ),"
-            "( 10003 ,4 ,10391 ,' '              ,' ' ,'1' ,10000 ,'' ,38 ),"
+            "( 10003 ,1 ,10300 ,'C020*C102'	     ,' ' ,'0' ,10000 ,'' ,35 )," // valorAsegurado = valorContrato * %asegurable
+            "( 10003 ,2 ,10211 ,'C210/C365'      ,' ' ,'1' ,10101 ,'' ,35 )," // prorrata       = diasAmparo/365
+            "( 10003 ,3 ,10212 ,'C300*C101'	     ,' ' ,'1' ,10101 ,'' ,35 )," // primaAnual     = valorAsegurado*tasaAmpararo
+            "( 10003 ,4 ,10301 ,'C211*C212'	     ,' ' ,'1' ,10101 ,'' ,35 )," // prima          = prorrata*primaAnual
+            "( 10003 ,5 ,10390 ,' '              ,' ' ,'0' ,10000 ,'' ,38 ),"
+            "( 10003 ,6 ,10391 ,' '              ,' ' ,'1' ,10000 ,'' ,38 ),"
 
             "( 10004 ,1	,10400 ,'C391*C010'      ,' ' ,' ' ,10000 ,'' ,36 ),"
             "( 10004 ,2	,10401 ,'C391*C010'      ,' ' ,' ' ,10000 ,'' ,39 ),"
@@ -1753,15 +1838,15 @@ class DBProvider {
             "( 10103 ,2	,10051 ,'[C]10001,10002,10003',' ' ,' ' ,10102 ,'' ,36 ),"
             "( 10103 ,3	,10000 ,'[C]10004'            ,' ' ,' ' ,10000 ,' ',35 ),"
 
-            "(10104, 1, 10050, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
-            "(10104, 2, 10052, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
-            "(10104, 3, 10055, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
-            "(10104, 4, 10000, '[C]10004'            , ' ' ,' ',10102 ,'' ,35 ),"
+            "( 10104, 1, 10050, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
+            "( 10104, 2, 10052, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
+            "( 10104, 3, 10055, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
+            "( 10104, 4, 10000, '[C]10004'            , ' ' ,' ',10102 ,'' ,35 ),"
 
-            "(10105, 1, 10050, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
-            "(10105, 2, 10053, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
-            "(10105, 3, 10058, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
-            "(10105, 4, 10000, '[C]10004'            , ' ' ,' ',10102 ,'' ,35 ),"
+            "( 10105, 1, 10050, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
+            "( 10105, 2, 10053, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
+            "( 10105, 3, 10058, '[C]10001,10002,10003', ' ' ,' ',10102 ,'' ,36 ),"
+            "( 10105, 4, 10000, '[C]10004'            , ' ' ,' ',10102 ,'' ,35 ),"
 
             "( 10090 ,1	,10000 ,'[C]10001,10002,10004',' ' ,' ' ,10000 ,'' ,35 ) "
           );
@@ -1815,7 +1900,7 @@ class DBProvider {
             "(10105, 1, 10100, 10050 ,0 ,1	  ),"
             "(10105, 2, 10101, 10050 ,0 ,0.15 ),"
             "(10105, 3, 10102, 10050 ,0 ,0.1  ),"
-            "(10105, 4, 10100, 10053 ,0 ,1	  ),"
+            "(10105, 4, 10100, 10053 ,0 ,3	  ),"
             "(10105, 5, 10101, 10053 ,0 ,0.15 ),"
             "(10105, 6, 10102, 10053 ,0 ,0.1  ),"
             "(10105, 7, 10100, 10058 ,0 ,1	  ),"
@@ -2028,6 +2113,14 @@ class DBProvider {
     return resultado;
   }
 
+  Future<int> getValidarAuxiliar(String id) async {
+
+    final db = await database;
+    print('Validar Auxiliar: '+id);
+    var consulta = await db.rawQuery( "select count(*)as id from g_auxiliar where "+id);
+    return consulta.first["id"];
+  }
+
 }
 
 class AuxiliarBloc {
@@ -2074,4 +2167,11 @@ class AuxiliarBloc {
     print('Login 2: '+resultado.toString());
     return resultado;
   }
+
+  Future<int> getValidarAuxiliar( String id ) async {
+    final int resultado = await DBProvider.db.getValidarAuxiliar(id);
+    print('Resultado: '+resultado.toString() );
+    return resultado;
+  }
+
 }

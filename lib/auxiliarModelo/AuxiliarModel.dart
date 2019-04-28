@@ -120,17 +120,22 @@ class Genero {                  // fixCombo (16 feb 2019): Nueva clase para el c
 
   int    _registro;
   String _descripcion;
+  String _parametro0;
 
-  Genero(this._descripcion);
   Genero.withId(this._registro,this._descripcion);
+  Genero(this._descripcion);
 
   int    get registro =>    _registro;
   String get descripcion => _descripcion;
+  String get parametro0 => _parametro0;
 
   set descripcion(String value) {
     _descripcion = value;
   }
 
+  set parametro0(String value) {
+    _parametro0 = value;
+  }
   //This function is to convert Genero Object to Map Object for database
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -139,12 +144,210 @@ class Genero {                  // fixCombo (16 feb 2019): Nueva clase para el c
       map['registro'] = _registro;
     }
     map['descripcion'] = _descripcion;
+    map['parametro0'] =  _parametro0;
     return map;
   }
 
   Genero.fromMapObject(Map<String, dynamic> map){
     this._registro    = map['registro'];
     this._descripcion = map['descripcion'];
+    this._parametro0  = map['parametro0'];
+  }
+}
+
+class EstadoCivil {                  // fixCombo (16 feb 2019): Nueva clase para el combo
+
+  int    _registro;
+  String _descripcion;
+  String _parametro0;
+
+  EstadoCivil.withId(this._registro,this._descripcion);
+  EstadoCivil(this._descripcion);
+
+  int    get registro =>    _registro;
+  String get descripcion => _descripcion;
+  String get parametro0 => _parametro0;
+
+  set descripcion(String value) {
+    _descripcion = value;
+  }
+
+  set parametro0(String value) {
+    _parametro0 = value;
+  }
+  //This function is to convert EstadoCivil Object to Map Object for database
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+
+    if(registro != null) {
+      map['registro'] = _registro;
+    }
+    map['descripcion'] = _descripcion;
+    map['parametro0'] =  _parametro0;
+    return map;
+  }
+
+  EstadoCivil.fromMapObject(Map<String, dynamic> map){
+    this._registro    = map['registro'];
+    this._descripcion = map['descripcion'];
+    this._parametro0  = map['parametro0'];
+  }
+}
+
+class Tipo {                  // fixCombo (16 feb 2019): Nueva clase para el combo
+
+  int    _registro;
+  String _descripcion;
+  String _parametro0;
+
+  Tipo.withId(this._registro,this._descripcion);
+  Tipo(this._descripcion);
+
+  int    get registro =>    _registro;
+  String get descripcion => _descripcion;
+  String get parametro0 => _parametro0;
+
+  set descripcion(String value) {
+    _descripcion = value;
+  }
+
+  set parametro0(String value) {
+    _parametro0 = value;
+  }
+  //This function is to convert Tipo Object to Map Object for database
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+
+    if(registro != null) {
+      map['registro'] = _registro;
+    }
+    map['descripcion'] = _descripcion;
+    map['parametro0'] =  _parametro0;
+    return map;
+  }
+
+  Tipo.fromMapObject(Map<String, dynamic> map){
+    this._registro    = map['registro'];
+    this._descripcion = map['descripcion'];
+    this._parametro0  = map['parametro0'];
+  }
+}
+
+class Clasificacion {                  // fixCombo (16 feb 2019): Nueva clase para el combo
+
+  int    _registro;
+  String _descripcion;
+  String _parametro0;
+
+  Clasificacion.withId(this._registro,this._descripcion);
+  Clasificacion(this._descripcion);
+
+  int    get registro =>    _registro;
+  String get descripcion => _descripcion;
+  String get parametro0 => _parametro0;
+
+  set descripcion(String value) {
+    _descripcion = value;
+  }
+
+  set parametro0(String value) {
+    _parametro0 = value;
+  }
+  //This function is to convert Clasificacion Object to Map Object for database
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+
+    if(registro != null) {
+      map['registro'] = _registro;
+    }
+    map['descripcion'] = _descripcion;
+    map['parametro0'] =  _parametro0;
+    return map;
+  }
+
+  Clasificacion.fromMapObject(Map<String, dynamic> map){
+    this._registro    = map['registro'];
+    this._descripcion = map['descripcion'];
+    this._parametro0  = map['parametro0'];
+  }
+}
+
+class Lugar {                  // fixCombo (16 feb 2019): Nueva clase para el combo
+
+  int    _registro;
+  String _descripcion;
+  String _parametro0;
+
+  Lugar.withId(this._registro,this._descripcion);
+  Lugar(this._descripcion);
+
+  int    get registro =>    _registro;
+  String get descripcion => _descripcion;
+  String get parametro0 => _parametro0;
+
+  set descripcion(String value) {
+    _descripcion = value;
+  }
+
+  set parametro0(String value) {
+    _parametro0 = value;
+  }
+  //This function is to convert Lugar Object to Map Object for database
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+
+    if(registro != null) {
+      map['registro'] = _registro;
+    }
+    map['descripcion'] = _descripcion;
+    map['parametro0'] =  _parametro0;
+    return map;
+  }
+
+  Lugar.fromMapObject(Map<String, dynamic> map){
+    this._registro    = map['registro'];
+    this._descripcion = map['descripcion'];
+    this._parametro0  = map['parametro0'];
+  }
+}
+
+
+class Municipio {                  // fixCombo (16 feb 2019): Nueva clase para el combo
+
+  int    _registro;
+  String _descripcion;
+  String _parametro0;
+
+  Municipio.withId(this._registro,this._descripcion);
+  Municipio(this._descripcion);
+
+  int    get registro =>    _registro;
+  String get descripcion => _descripcion;
+  String get parametro0 => _parametro0;
+
+  set descripcion(String value) {
+    _descripcion = value;
+  }
+
+  set parametro0(String value) {
+    _parametro0 = value;
+  }
+  //This function is to convert Municipio Object to Map Object for database
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+
+    if(registro != null) {
+      map['registro'] = _registro;
+    }
+    map['descripcion'] = _descripcion;
+    map['parametro0'] =  _parametro0;
+    return map;
+  }
+
+  Municipio.fromMapObject(Map<String, dynamic> map){
+    this._registro    = map['registro'];
+    this._descripcion = map['descripcion'];
+    this._parametro0  = map['parametro0'];
   }
 }
 

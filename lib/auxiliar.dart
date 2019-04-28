@@ -1,6 +1,7 @@
 // Copyright 2020-present the Flutter authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
@@ -22,53 +23,8 @@ import 'package:flutter/services.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sqflite/sqflite.dart';          // fixCombo (16 feb 2019): new variable
-
-
-class EstadoCivil {
-  EstadoCivil(this.registro,this.descripcion);
-  int    registro;
-  String descripcion;
-}
-
-class Lugar {
-  Lugar(this.registro,this.descripcion);
-  int    registro;
-  String descripcion;
-}
-
-class Municipio {
-  Municipio(this.registro,this.descripcion);
-  int    registro;
-  String descripcion;
-}
-
-class Clasificacion {
-  Clasificacion(this.registro,this.descripcion);
-  int    registro;
-  String descripcion;
-}
-
-class Tipo {
-  Tipo(this.registro,this.descripcion);
-  int    registro;
-  String descripcion;
-}
-
-Clasificacion clasificacion;
-List<Clasificacion> clasificaciones = <Clasificacion>[Clasificacion(14, 'Persona jurídica'), Clasificacion(15, 'Persona natural'), Clasificacion(13, 'Consorcio')];
-
-Tipo tipo;
-List<Tipo> tipos = <Tipo>[Tipo(2, 'Nit'), Tipo(1, 'Nit persona natural'), Tipo(3, 'Cedula de ciudadanía')];
-
-EstadoCivil estadoCivil;
-List<EstadoCivil> estadoCiviles = <EstadoCivil>[EstadoCivil(60, 'Casado'), EstadoCivil(61, 'Soltero')];
-
-Lugar lugar;
-List<Lugar> lugares = <Lugar>[Lugar(41, 'Ibagué'), Lugar(42, 'Bogota')];
-//List<Lugar> lugares.add(await DBProvider.db.getAllRegistro(' where tabla=110 order by descripcion'));
-
-Municipio municipio;
-List<Municipio> municipios = <Municipio>[Municipio(27, 'Ibagué'), Municipio(28, 'Bogota')];
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();
@@ -88,7 +44,33 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
   DBProvider dbProvider = DBProvider();         // fixCombo (16 feb 2019): new variable
   List<Genero> generos;
+  List<EstadoCivil> estadoCiviles;
+  List<Tipo> tipos;
+  List<Clasificacion> clasificaciones;
+
+  List<Municipio> municipios;
+  List<Lugar> lugares;
+
   var _genero = null;
+  var _estadoCivil = null;
+  var _tipo = null;
+  var _clasificacion = null;
+  var _municipio = null;
+  var _lugar = null;
+
+
+  //---AutoComplete variables
+
+  var intermedList = <String>[];
+  String _intermediario = '';
+
+  GlobalKey<AutoCompleteTextFieldState<String>> autoCompKey = new GlobalKey();
+
+  AutoCompleteTextField searchTextField;
+
+
+
+
 
   int _auxiliar;
   var _id         = TextEditingController();
@@ -142,11 +124,6 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
       _auxiliar = 0;
       nacimiento = new DateTime.now();
 
-      estadoCivil=estadoCiviles[0];
-      lugar=lugares[0];
-      tipo=tipos[0];
-      municipio=municipios[0];
-      clasificacion=clasificaciones[0];
     }
     else {                    // Manejo DB es Actualizar
       print('U P D A T E ...');
@@ -173,19 +150,12 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
       _documento.text = widget.actual.documento;
 
       _genero         = widget.actual.genero.toString();        // fixCombo (16 feb 2019): load list
+      _estadoCivil    = widget.actual.estadoCivil.toString();
+      _tipo           = widget.actual.tipo.toString();
+      _clasificacion  = widget.actual.clasificacion.toString();
+      _municipio      = widget.actual.municipio.toString();
+      _lugar          = widget.actual.lugar.toString();
 
-      estadoCivil=estadoCiviles[0];
-
-      lugar=lugares[0];
-      tipo=tipos[0];
-      municipio=municipios[0];
-      clasificacion=clasificaciones[0];
-
-      //      genero          = widget.actual.genero;
-      //      lugar           = widget.actual.lugar;
-      //      municipio       = widget.actual.municipio;
-      //      clasificacion      = widget.actual.clasificacion;
-      //      tipo             = widget.actual.tipo;
     }
   }
 
@@ -195,8 +165,19 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
     TextStyle textStyle = Theme.of(context).textTheme.title;        // fixCombo (16 feb 2019): load list
     if(generos == null) {
-      generos = List<Genero>();
-      updateListView();
+      generos        = List<Genero>();
+      estadoCiviles  = List<EstadoCivil>();
+      tipos          = List<Tipo>();
+      clasificaciones= List<Clasificacion>();
+      municipios     = List<Municipio>();
+      lugares        = List<Lugar>();
+
+      generoListView();
+      estadoCivilListView();
+      tipoListView();
+      clasificacionListView();
+      municipioListView();
+      lugarListView();
     }
 
     Color color = Theme.of(context).primaryColor;
@@ -278,8 +259,22 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
                   focusNode: _idFocus,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (term) {
-                    _idFocus.unfocus();
-                    FocusScope.of(context).requestFocus(_nombresFocus);
+
+                    bloc.getValidarAuxiliar("identificacion = "+_id.text.trim() ).then((value) {
+                      if ( int.parse('$value') >= 1 ) {
+                        Fluttertoast.showToast( msg: "Auxiliar previamente registrado... ", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIos: 2,
+                            backgroundColor: Colors.redAccent, textColor: Colors.black, fontSize: 16.0 );
+                        FocusScope.of(context).requestFocus(_idFocus);
+                      }
+                      else {
+                        _idFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_nombresFocus);
+                      }
+                    }, onError: (error) {
+                      Fluttertoast.showToast( msg: "Error de conexión, reintente nuevamente... ", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIos: 2,
+                          backgroundColor: Colors.redAccent, textColor: Colors.black, fontSize: 16.0 );
+                    });
+
                   },
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
@@ -344,47 +339,31 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
             initialValue: nacimiento,
 //
 //              initialValue: DateTime.now(),
-
             decoration: InputDecoration(
                 icon: const Icon(Icons.calendar_today),
                 labelText: 'Nacimiento'),
             onChanged: (dt) => setState(() => nacimiento = dt),
           ),
 
-          new FormField(
-            builder: (FormFieldState state) {
-              return InputDecorator(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.place),
-//                    hintText: 'Lugar de nacimiento',
-//                    labelText: 'Lugar',
-                ),
+          SizedBox(height: 12.0),
 
-                child: new DropdownButtonHideUnderline(
-
-                  child: new DropdownButton<Lugar>(
-                    value: lugar,
-                    onChanged: (Lugar newValue) {
-                      setState(() {
-                        lugar = newValue;
-                      });
-                    },
-                    items: lugares.map((Lugar user) {
-                      return new DropdownMenuItem<Lugar>(
-                        value: user,
-                        child: new Text(
-                          user.descripcion,
-//                            style: new TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-
-
-                ),
-              );
-            },
-          ),
+          ListTile (                              // fixCombo (16 feb 2019): new variable
+            leading: Icon(Icons.place),
+            title: DropdownButton<String> (
+              items: lugares.map((dynamic item){
+                return DropdownMenuItem<String>(
+                  value: item.registro.toString(),
+                  child: Text(item.descripcion),
+                );
+              }).toList(),
+              value: _lugar,
+              hint: new Text("Lugar nacimiento         "),
+              onChanged: (String newValueSelected) {
+                var cual = lugares.where((registro) => registro == newValueSelected );
+                _onDropDownLugarSelected(newValueSelected);
+              },
+            ),
+          ),// lugar
 
           ListTile (                              // fixCombo (16 feb 2019): new variable
             leading: Icon(Icons.wc),
@@ -396,53 +375,33 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
                 );
               }).toList(),
               value: _genero,
-              hint: new Text("Seleccione el género"),
+              hint: new Text("Género                           "),
               onChanged: (String newValueSelected) {
-
-                print('Selecionado:'+newValueSelected);
-
                 var cual = generos.where((registro) => registro == newValueSelected );
-                print('Encontado:' +cual.toString());
-
-                _onDropDownItemSelected(newValueSelected);
+                _onDropDownGeneroSelected(newValueSelected);
               },
             ),
-          ),
+          ),// genero
 
+          ListTile (                              // fixCombo (16 feb 2019): new variable
+            leading: Icon(Icons.share),
+            title: DropdownButton<String> (
+              items: estadoCiviles.map((dynamic item){
+                return DropdownMenuItem<String>(
+                  value: item.registro.toString(),
+                  child: Text(item.descripcion),
+                );
+              }).toList(),
+              value: _estadoCivil,
+              hint: new Text("Estado civil                   "),
+              onChanged: (String newValueSelected) {
+                var cual = estadoCiviles.where((registro) => registro == newValueSelected );
+                _onDropDownEstadoCivilSelected(newValueSelected);
+              },
+            ),
+          ),// estadoCivil
 
-          new FormField(
-            builder: (FormFieldState state) {
-              return InputDecorator(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.share),
-//                    labelText: 'Estado civil',
-                ),
-
-                child: new DropdownButtonHideUnderline(
-                  child: new DropdownButton<EstadoCivil>(
-                    value: estadoCivil,
-                    onChanged: (EstadoCivil newValue) {
-                      setState(() {
-                        estadoCivil = newValue;
-                      });
-                    },
-                    items: estadoCiviles.map((EstadoCivil user) {
-                      return new DropdownMenuItem<EstadoCivil>(
-                        value: user,
-                        child: new Text(
-                          user.descripcion,
-//                            style: new TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-
-                ),
-              );
-            },
-          ),
 //            new Text("Selecionado: ${estadoCivil.registro} (${estadoCivil.descripcion})"),
-
 
         ],
       ),
@@ -455,70 +414,50 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
       children: [
-        new FormField(
-          builder: (FormFieldState state) {
-            return InputDecorator(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.person),
-//                    labelText: 'Clasificacion',
-              ),
 
-              child: new DropdownButtonHideUnderline(
-                child: new DropdownButton<Clasificacion>(
-                  value: clasificacion,
-                  onChanged: (Clasificacion newValue) {
-                    setState(() {
-                      clasificacion = newValue;
-                    });
-                  },
-                  items: clasificaciones.map((Clasificacion user) {
-                    return new DropdownMenuItem<Clasificacion>(
-                      value: user,
-                      child: new Text(
-                        user.descripcion,
-//                            style: new TextStyle(color: Colors.black),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+        ListTile (                              // fixCombo (16 feb 2019): new variable
+          leading: Icon(Icons.contact_mail),
+          title: DropdownButton<String> (
+            items: tipos.map((dynamic item){
+              return DropdownMenuItem<String>(
+                value: item.registro.toString(),
+                child: Text(item.descripcion),
+              );
+            }).toList(),
+            value: _tipo,
+            hint: new Text("Documento                   "),
+            onChanged: (String newValueSelected) {
+              var cual = tipos.where((registro) => registro == newValueSelected );
+              _onDropDownTipoSelected(newValueSelected);
+            },
+          ),
+        ),// tipo
 
-            );
-          },
-        ),
+        ListTile (                              // fixCombo (16 feb 2019): new variable
+          leading: Icon(Icons.person),
+          title: DropdownButton<String> (
+            items: clasificaciones.map((dynamic item){
+              return DropdownMenuItem<String>(
+                value: item.registro.toString(),
+                child: Text(item.descripcion),
+              );
+            }).toList(),
+            value: _clasificacion,
+            hint: new Text("Clasificación tercero   "),
+            onChanged: (String newValueSelected) {
 
-        new FormField(
-          builder: (FormFieldState state) {
-            return InputDecorator(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.contact_mail),
-//                    labelText: 'Tipo',
-              ),
-              child: new DropdownButtonHideUnderline(
+              print('Selecionado:'+newValueSelected);
 
-                child: new DropdownButton<Tipo>(
-                  value: tipo,
-                  onChanged: (Tipo newValue) {
-                    setState(() {
-                      tipo = newValue;
-                    });
-                  },
-                  items: tipos.map((Tipo user) {
-                    return new DropdownMenuItem<Tipo>(
-                      value: user,
-                      child: new Text(
-                        user.descripcion,
-//                            style: new TextStyle(color: Colors.black),
-                      ),
-                    );
-                  }).toList(),
-                ),
+              var cual = clasificaciones.where((registro) => registro == newValueSelected );
+              print('Encontado:' +cual.toString());
 
-              ),
-            );
-          },
-        ),
+              _onDropDownClasificacionSelected(newValueSelected);
+            },
+          ),
+        ),// clasificacion
+
         datosDescripcion,
+
         datosAdicional,
       ], // children principal
 
@@ -542,38 +481,25 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
           keyboardType: TextInputType.text,
         ),
 
-        new FormField(
-          builder: (FormFieldState state) {
-            return InputDecorator(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.place),
-//                    labelText: 'Municipio',
-              ),
-              child: new DropdownButtonHideUnderline(
+        SizedBox(height: 12.0),
 
-                child: new DropdownButton<Municipio>(
-                  value: municipio,
-                  onChanged: (Municipio newValue) {
-                    setState(() {
-                      municipio = newValue;
-                    });
-                  },
-                  items: municipios.map((Municipio user) {
-                    return new DropdownMenuItem<Municipio>(
-                      value: user,
-                      child: new Text(
-                        user.descripcion,
-//                            style: new TextStyle(color: Colors.black),
-                      ),
-                    );
-                  }).toList(),
-                ),
-
-
-              ),
-            );
-          },
-        ),
+        ListTile (                              // fixCombo (16 feb 2019): new variable
+          leading: Icon(Icons.place),
+          title: DropdownButton<String> (
+            items: municipios.map((dynamic item){
+              return DropdownMenuItem<String>(
+                value: item.registro.toString(),
+                child: Text(item.descripcion),
+              );
+            }).toList(),
+            value: _municipio,
+            hint: new Text("Residencia                   "),
+            onChanged: (String newValueSelected) {
+              var cual = municipios.where((registro) => registro == newValueSelected );
+              _onDropDownMunicipioSelected(newValueSelected);
+            },
+          ),
+        ),// municipio
 
         new TextFormField(
           controller: _movil,
@@ -725,8 +651,8 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
                 Auxiliar rnd = Auxiliar(          // objeto
                   auxiliar:         _auxiliar,
-                  tipo:             tipo.registro,
-                  clasificacion:    clasificacion.registro,
+                  tipo:             int.parse(_tipo.toString() ),    // fixCombo (16 feb 2019): new variable
+                  clasificacion:    int.parse(_clasificacion.toString() ),
                   identificacion:   int.parse(_id.text),
 
                   primerNombre:    primerNombre,
@@ -738,14 +664,14 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
                   foto:             fotoOk,
 
                   nacimiento:       nacimiento.toString(),
-                  lugar:            lugar.registro,
+                  lugar:            int.parse(_lugar.toString() ),    // fixCombo (16 feb 2019): new variable
 
                   genero:           int.parse(_genero.toString() ),    // fixCombo (16 feb 2019): new variable
+                  estadoCivil:      int.parse(_estadoCivil.toString()),// fixCombo (16 feb 2019): new variable
 
-                  estadoCivil:      estadoCivil.registro,
 
                   direccion:        _direccion.text.trim(),
-                  municipio:        municipio.registro,
+                  municipio:        int.parse(_municipio.toString() ),
                   movil:            _movil.text.trim(),
                   fijo:             _fijo.text.trim(),
                   correo:           _correo.text.trim(),
@@ -776,19 +702,114 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
   }
 
-  void _onDropDownItemSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
+  void _onDropDownGeneroSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
     setState(() {
       this._genero = newValueSelected;
     });
   }
 
-  void updateListView() {                                 // fixCombo (16 feb 2019): new function
+  void generoListView() {                                 // fixCombo (16 feb 2019): new function
     final Future<Database> db = dbProvider.initDB();
     db.then((database) {
       Future<List<Genero>> generoListFuture = dbProvider.getGeneroList();
       generoListFuture.then((generoList){
         setState(() {
           this.generos = generoList;
+        });
+      });
+    }
+    );
+  }
+
+  void _onDropDownEstadoCivilSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
+    setState(() {
+      this._estadoCivil = newValueSelected;
+    });
+  }
+
+  void estadoCivilListView() {                                 // fixCombo (16 feb 2019): new function
+    final Future<Database> db = dbProvider.initDB();
+    db.then((database) {
+      Future<List<EstadoCivil>> estadoCivilListFuture = dbProvider.getEstadoCivilList();
+      estadoCivilListFuture.then((estadoCivilList){
+        setState(() {
+          this.estadoCiviles = estadoCivilList;
+        });
+      });
+    }
+    );
+  }
+
+  void _onDropDownTipoSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
+    setState(() {
+      this._tipo = newValueSelected;
+    });
+  }
+
+  void tipoListView() {                                 // fixCombo (16 feb 2019): new function
+    final Future<Database> db = dbProvider.initDB();
+    db.then((database) {
+      Future<List<Tipo>> tipoListFuture = dbProvider.getTipoList();
+      tipoListFuture.then((tipoList){
+        setState(() {
+          this.tipos = tipoList;
+        });
+      });
+    }
+    );
+  }
+
+  void _onDropDownClasificacionSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
+    setState(() {
+      this._clasificacion = newValueSelected;
+    });
+  }
+
+  void clasificacionListView() {                                 // fixCombo (16 feb 2019): new function
+    final Future<Database> db = dbProvider.initDB();
+    db.then((database) {
+      Future<List<Clasificacion>> clasificacionListFuture = dbProvider.getClasificacionList();
+      clasificacionListFuture.then((clasificacionList){
+        setState(() {
+          this.clasificaciones = clasificacionList;
+        });
+      });
+    }
+    );
+  }
+
+  void _onDropDownMunicipioSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
+    setState(() {
+      this._municipio = newValueSelected;
+    });
+  }
+
+  void municipioListView() {                                 // fixCombo (16 feb 2019): new function
+    final Future<Database> db = dbProvider.initDB();
+    db.then((database) {
+      Future<List<Municipio>> municipioListFuture = dbProvider.getMunicipioList();
+      municipioListFuture.then((municipioList){
+        setState(() {
+          this.municipios = municipioList;
+        });
+      });
+    }
+    );
+  }
+
+  void _onDropDownLugarSelected(String newValueSelected) { // fixCombo (16 feb 2019): new function
+    setState(() {
+      this._lugar = newValueSelected;
+    });
+  }
+
+  void lugarListView() {                                 // fixCombo (16 feb 2019): new function
+    final Future<Database> db = dbProvider.initDB();
+    db.then((database) {
+      Future<List<Lugar>> lugarListFuture = dbProvider.getLugarList();
+      lugarListFuture.then((lugarList){
+        setState(() {
+          this.lugares = lugarList;
         });
       });
     }

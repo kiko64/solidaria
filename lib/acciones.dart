@@ -61,7 +61,7 @@ class _AccionListState extends State<AccionList> {
                   hintText: "Buscar",
                 ),
               ),
-            ),
+            ),// seek
 
             Expanded(
               child: StreamBuilder<List<Accion>>(  //new separate
@@ -136,7 +136,7 @@ class _AccionListState extends State<AccionList> {
                   }
                 },
               ),
-            ),
+            ),// listView
 
             SizedBox(height: 54.0),
 
