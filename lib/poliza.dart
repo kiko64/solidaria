@@ -119,8 +119,8 @@ class _PolizaPageState extends State<PolizaPage> {
   // objeto
   var _numeroContrato   = TextEditingController();
   var _valorContrato    = TextEditingController();
-  DateTime fechaInicial = new DateTime.now();
-  DateTime fechaFinal   = new DateTime.now();
+  DateTime fechaInicial = DateTime.now();
+  DateTime fechaFinal   = DateTime.now();
 
   final FocusNode _cupoOperativoFocus  = FocusNode();
   final FocusNode _comisionFocus       = FocusNode();
@@ -148,22 +148,15 @@ class _PolizaPageState extends State<PolizaPage> {
 
   void _actualizarFecha() {
 
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      int ano = fechaInicial.year;
-      ano = ano +  int.parse(_periodo.text);
+    int ano = fechaInicial.year;
+    ano = ano +  int.parse(_periodo.text);
 
-//
+    DateTime dt = DateTime.parse(
+      ano.toString()+'-'+
+      fechaInicial.month.toString().padLeft(2,'0')+'-'+
+      fechaInicial.day.toString().padLeft(2,'0')+' 00:00:00.000');
 
-      fechaFinal = DateTime.parse(
-        ano.toString()+'-'+
-        fechaInicial.month.toString().padLeft(2,'0')+'-'+
-        fechaInicial.day.toString().padLeft(2,'0')+' 00:00:00.000');
-    });
+    setState(() => fechaFinal = dt);
   }
 
   @override
@@ -172,24 +165,24 @@ class _PolizaPageState extends State<PolizaPage> {
       print('I N S E R T ...');
 
       _poliza = 0;
-      fechaEmision          = new DateTime.now();
+      fechaEmision          = DateTime.now();
       _periodo.text         = '1';
       _numero.text          = '0';
       _temporario.text      = '0';
 
       _comision.text        = '10.00';
       _cupoOperativo.text   = '0';
-      _clausulado.text       = 'Observación';
+      _clausulado.text      = 'Observación';
 
       _periodoEmision.text  = '1';
       _retroactividad.text  = '21';
-      fechaHoraInicial      = new DateTime.now();
-      fechaHoraFinal        = new DateTime.now();
+      fechaHoraInicial      = DateTime.now();
+      fechaHoraFinal        = DateTime.now();
 
-      _numeroContrato.text = '0AZXXX999';
-      _valorContrato.text  = '2000000.00';
-      fechaInicial         = new DateTime.now();
-      fechaFinal           = new DateTime.now();
+      _numeroContrato.text  = '0AZXXX999';
+      _valorContrato.text   = '2000000.00';
+      fechaInicial          = DateTime.now();
+      fechaFinal            = DateTime.now();
 
       sede=sedes[0];
       estado=estados[0];
@@ -220,9 +213,9 @@ class _PolizaPageState extends State<PolizaPage> {
 //        DateTime todayDate = DateTime.parse(String);
 
       _periodoEmision.text = widget.actual.periodoEmision.toString();
-      _retroactividad.text  = widget.actual.retroactividad.toString();
-      fechaHoraInicial            = DateTime.parse(widget.actual.fechaHoraInicial); // String -> DateTime
-      fechaHoraFinal              = DateTime.parse(widget.actual.fechaHoraFinal);   // String -> DateTime
+      _retroactividad.text = widget.actual.retroactividad.toString();
+      fechaHoraInicial     = DateTime.parse(widget.actual.fechaHoraInicial); // String -> DateTime
+      fechaHoraFinal       = DateTime.parse(widget.actual.fechaHoraFinal);   // String -> DateTime
 
       _numeroContrato.text = widget.actual.numeroContrato.toString();
       _valorContrato.text  = widget.actual.valorContrato.toString();
@@ -244,6 +237,7 @@ class _PolizaPageState extends State<PolizaPage> {
 //        _foto = File(widget.actual.foto.toString());          // FOTO: Pasa la imagen a la variable
 //      }
 //      else _foto = null;
+
     }
   }
 
@@ -254,7 +248,7 @@ class _PolizaPageState extends State<PolizaPage> {
     TextStyle textStyle = Theme.of(context).textTheme.title;
     if(objetos == null) {                               // fixCombo (16 feb 2019): new variable
       objetos = List<Objeto>();
-      updateListView();
+      objetoListView();
     }
 
     Widget datosIdentificacion = ExpansionTile (
@@ -558,7 +552,7 @@ class _PolizaPageState extends State<PolizaPage> {
         DateTimePickerFormField(
           inputType: inputType,
           format: formats[inputType],
-          editable: editable,
+          editable: true,
           initialValue: fechaHoraInicial,
           decoration: InputDecoration(
               icon: const Icon(Icons.date_range),
@@ -570,7 +564,7 @@ class _PolizaPageState extends State<PolizaPage> {
         DateTimePickerFormField(
           inputType: inputType,
           format: formats[inputType],
-          editable: editable,
+          editable: true,
           initialValue: fechaHoraFinal,
           decoration: InputDecoration(
               icon: const Icon(Icons.date_range),
@@ -633,7 +627,7 @@ class _PolizaPageState extends State<PolizaPage> {
             hint: new Text("Seleccione el objeto"),
             onChanged: (String newValueSelected) {
               print(newValueSelected);
-              _onDropDownItemSelected(newValueSelected);
+              _onDropDownObjetoSelected(newValueSelected);
             },
           ),
         ),// objeto
@@ -699,8 +693,8 @@ class _PolizaPageState extends State<PolizaPage> {
           editable: editable,
           initialValue: fechaInicial,
           decoration: InputDecoration(
-              icon: const Icon(Icons.date_range),
-              labelText: 'Fecha inicial'),
+            icon: const Icon(Icons.date_range),
+            labelText: 'Fecha inicial'),
           onChanged: (dt) => setState(() => fechaInicial = dt),
         ),
 
@@ -773,6 +767,7 @@ class _PolizaPageState extends State<PolizaPage> {
                   print('Upadate <-- '+fotoOk );              // FOTO: Pasa el nombre del archivo a la DB
 
                   Poliza ctv = Poliza (
+
                       poliza:           _poliza,
                       sede:             sede.registro,
                       fechaEmision:     fechaEmision.toString(),
@@ -829,13 +824,13 @@ class _PolizaPageState extends State<PolizaPage> {
 //    date ? time ? InputType.both : InputType.date : InputType.time);
   }
 
-  void _onDropDownItemSelected(String newValueSelected) {   // fixCombo (16 feb 2019): new function
+  void _onDropDownObjetoSelected(String newValueSelected) {   // fixCombo (16 feb 2019): new function
     setState(() {
       this._objeto = newValueSelected;
     });
   }
 
-  updateListView() async {                                 // fixCombo (16 feb 2019): new function
+  objetoListView() async {                                 // fixCombo (16 feb 2019): new function
     final Future<Database> db = dbPoliza.initDB();
     db.then((database) {
       Future<List<Objeto>> objetoListFuture = dbPoliza.getObjetoList();
