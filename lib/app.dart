@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:emision/amparos.dart';
+import 'package:emision/inicio.dart';
 import 'package:emision/polizaPagination.dart';
 import 'package:emision/polizas.dart';
 import 'package:emision/ventanaDatos.dart';
@@ -37,7 +38,7 @@ class SeguridadApp extends StatelessWidget {
         ? kIOSTheme
         : kDefaultTheme,
 
-    home: AuxiliarList(),
+    home: PaginaInicio(),
       routes: <String, WidgetBuilder>{
         '/polizaPagination'    : (BuildContext context) => PageSelectorDemo(), //AmparoList()
         '/polizas': (BuildContext context) => PolizaList(),
