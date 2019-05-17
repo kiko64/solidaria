@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "526033766331",
+    "firebase_url": "https://solidariaapp.firebaseio.com",
+    "project_id": "solidariaapp",
+    "storage_bucket": "solidariaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526033766331:android:d1ded1b085a637fd",
+        "android_client_info": {
+          "package_name": "com.example.recoger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526033766331-l1jl3u5cprv2ub5ibj2sqtker1f775oj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recoger",
+            "certificate_hash": "eefcc7b2a6183612247f6ec641eed08ca8aeb81c"
+          }
+        },
+        {
+          "client_id": "526033766331-m5ppp7r6hluttg7nci58gcl3qv18stan.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9D0s8UV7DeYA_Myw5CYiLUuZHtBG_5p4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526033766331-m5ppp7r6hluttg7nci58gcl3qv18stan.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "526033766331-16e7361vi5481dkrc3meg62suskgbg00.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "SolidariaApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526033766331:android:57c64cf776c463e0",
+        "android_client_info": {
+          "package_name": "com.solidaria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526033766331-m6aqr3b2t3ef7pmges7mf801e8104f8l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.solidaria",
+            "certificate_hash": "eefcc7b2a6183612247f6ec641eed08ca8aeb81c"
+          }
+        },
+        {
+          "client_id": "526033766331-m5ppp7r6hluttg7nci58gcl3qv18stan.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9D0s8UV7DeYA_Myw5CYiLUuZHtBG_5p4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526033766331-m5ppp7r6hluttg7nci58gcl3qv18stan.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "526033766331-16e7361vi5481dkrc3meg62suskgbg00.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "SolidariaApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
