@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:emision/amparos.dart';
+import 'package:emision/polizaPagination.dart';
+import 'package:emision/polizas.dart';
+import 'package:emision/ventanaDatos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';                     //new
 import 'package:flutter/cupertino.dart';
@@ -34,6 +38,13 @@ class SeguridadApp extends StatelessWidget {
         : kDefaultTheme,
 
     home: AuxiliarList(),
+      routes: <String, WidgetBuilder>{
+        '/polizaPagination'    : (BuildContext context) => PageSelectorDemo(), //AmparoList()
+        '/polizas': (BuildContext context) => PolizaList(),
+        '/auxiliares'  : (BuildContext context) => AuxiliarList(),
+        '/amparos'   : (BuildContext context) => AmparoList(0),
+        '/gregistro' : (BuildContext context) => VentanaGRegistro(actual: null),
+      },
 //    home: PolizaList(),                                   // (Verificar)
 //    home: AccionList(),                                   // (Verificar)
 //    home: AmparoList(),                                   // (Verificar)
