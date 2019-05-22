@@ -165,11 +165,10 @@ class DBProvider {
             "favorito text not null,"
 
             "foto text default null,"
-            "nacimiento text not null,"
+            "nacimiento text default null,"
             "lugar integer not null,"
-            "genero integer not null,"
-            "estadoCivil integer not null,"
-
+            "genero integer default null,"
+            "estadoCivil integer default null,"
 
             "direccion text not null,"
             "municipio integer not null,"
@@ -345,22 +344,21 @@ class DBProvider {
             "foreign key (seguimiento) references g_registro(registro) on delete cascade on update no action ) "
           );
 
-          await db.execute(
-            "create table intermedario ("
-            "intermedario integer primary key autoincrement,"
-            "asesor integer not null,"
-            "agencia integer not null,"
-            "puntoVenta integer not null,"
-            "porcentajeCumplimiento real not null,"
-            "cupoOperativo real not null,"
-            "cumuloActual real not null,"
-            "cupoDisponible real not null,"
 
-            "foreign key (intermedario)references g_auxiliar(auxiliar) on delete cascade on update no action,"
-            "foreign key (agencia)     references g_registro(auxiliar) on delete cascade on update no action,"
-            "foreign key (puntoVenta)  references g_registro(auxiliar) on delete cascade on update no action )"
+          await db.execute (
+              "create table intermedario ("
+                  "intermedario         integer primary key autoincrement,"
+                  "asesor               integer not null,"
+                  "agencia              integer not null,"
+                  "puntoVenta           integer not null,"
+                  "clave                text not null,"
+                  "comisionCumplimiento real not null,"
+                  "delegacion           real not null,"
+
+                  "foreign key (intermedario)references g_auxiliar(auxiliar) on delete cascade on update no action,"
+                  "foreign key (agencia)     references g_registro(auxiliar) on delete cascade on update no action,"
+                  "foreign key (puntoVenta)  references g_registro(auxiliar) on delete cascade on update no action )"
           );
-
 
           await db.execute(
             "create table participacion ("
@@ -374,16 +372,30 @@ class DBProvider {
           );
 
 
-          await db.execute(
-            "create table afianzado ("
-            "afianzado integer primary key autoincrement,"
-            "poliza integer not null,"
-            "tomador integer not null,"
-            "porcentaje real not null,"
-            "principal int not null,"
 
-            "foreign key (poliza)  references poliza(poliza) on delete cascade on update no action,"
-            "foreign key (tomador) references g_auxiliar(auxiliar) on delete cascade on update no action )"
+          await db.execute(
+              "create table afianzado ("
+                  "afianzado     integer primary key autoincrement,"
+                  "tomador       integer not null,"
+                  "cupoOperativo real not null,"
+                  "cumuloActual  real not null,"
+
+                  "foreign key (tomador) references g_auxiliar(auxiliar) on delete cascade on update no action )"
+          );
+
+//TODO eliminar esta tabla ya que el tomador es el mismo afianzado, falta el contratante
+         //TODO Crear tabla contratante???
+
+          await db.execute(
+              "create table tomador ("
+                  "tomador    integer primary key autoincrement,"
+                  "poliza     integer not null,"
+                  "afianzado  integer not null,"
+                  "porcentaje real not null,"
+                  "principal  int not null,"
+
+                  "foreign key (poliza)    references poliza(poliza) on delete cascade on update no action,"
+                  "foreign key (afianzado) references g_auxiliar(auxiliar) on delete cascade on update no action )"
           );
 
 
@@ -1974,6 +1986,26 @@ class DBProvider {
             "from poliza pl, g_auxiliar xl, clase cl "
             "where pl.afianzado = xl.auxiliar and pl.objeto = cl.clase "
           );
+/*
+         await db.execute(
+             "create view v_auxiliar as "
+                 "select au.auxiliar, au.clasificacion, cl.descripcion as descClasificacion, au.tipo, tp.descripcion as descTipo, au.identificacion, au.fecha, au.password, "
+                 "au.token, au.primerNombre, au.segundoNombre, au.primerApellido, au.segundoApellido,"
+                 "au.favorito, au.foto, au.nacimiento, au.lugar, lg.descripcion as descLugar, au.genero, ge.descripcion as descGenero, au.estadoCivil, ec.descripcion as descEstadoCivil, au.direccion,"
+                 "au.municipio, mn.descripcion as descMunicipio, au.movil, au.fijo, au.correo, au.documento, au.sincronizar"
+                 "from g_auxiliar au, g_registro cl, g_registro tp, g_registro ge, g_registro ec, g_registro lg, g_registro mn"
+                 "where au.clasificacion = cl.registro and "
+                 "au.tipo = tp.registro and"
+                 "au.genero = ge.registro and"
+                 "au.estadoCivil = ec.registro and"
+                 "au.lugar = lg.registro and"
+                 "au.municipio = mn.registro"
+
+                 //Falta incluir la descripción de los campos parametricos
+
+                 //"where pl.afianzado = xl.auxiliar and pl.objeto = cl.clase "
+         );
+*/
           print('Creación vistas...');
 
         });
@@ -2094,6 +2126,7 @@ class DBProvider {
     return consulta.isNotEmpty ? Auxiliar.fromMap(consulta.first) : null;
   }
 
+  //TODO crear una vista de g_auxiliar para traer las descripciones
   Future<List<Auxiliar>> getAllAuxiliar() async {
     final db = await database;
     var consulta = await db.query("g_auxiliar order by tipo, auxiliar");

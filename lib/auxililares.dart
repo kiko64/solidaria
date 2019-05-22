@@ -50,14 +50,15 @@ class _AuxiliarListState extends State<AuxiliarList> {
 
 
     return new Scaffold(
-      //appBar: AppBar(
-      //  title: new Text("Lista", style: new TextStyle(color: Colors.white),),
-      //),
+      appBar: AppBar(
+        title: new Text("Lista de Terceros"),
+      ),
 
         body: Container(
+          padding: EdgeInsets.only(top: 20.0),
           child: Column(
             children: <Widget>[
-
+/*
               Container(
                 margin: EdgeInsets.fromLTRB(8, 32, 8, 9),
                 height: 40,
@@ -80,6 +81,7 @@ class _AuxiliarListState extends State<AuxiliarList> {
                   ),
                 ),
               ),
+              */
 
               Expanded(
                 child: StreamBuilder<List<Auxiliar>>(  //new separate
@@ -132,24 +134,21 @@ class _AuxiliarListState extends State<AuxiliarList> {
                                     )
                                 );
                               },
-
+/*
                               leading: CircleAvatar(
                                   radius: 28.0,
                                   backgroundColor: Colors.transparent,
                                   //backgroundImage: AssetImage('assets/imagen.jpg')
                                   backgroundImage: AssetImage( item.foto.toString() )
                               ),
-
-                              title: Text(item.primerNombre+' '+item.segundoNombre+' ('+item.auxiliar.toString()+')'+
-                                  item.nacimiento.substring(0,10)+item.nacimiento.substring(11,13)+item.nacimiento.substring(14,16)+item.nacimiento.substring(17,19),
+*/
+                              title: Text("${item.primerNombre} ${item.segundoNombre} ${item.auxiliar.toString()}",//+item.nacimiento.substring(0,10)+item.nacimiento.substring(11,13)+item.nacimiento.substring(14,16)+item.nacimiento.substring(17,19),
                                 style: TextStyle(fontWeight: FontWeight.bold),   // fontSize: 18,
                               ),
 
                               //child: row(
                               //children[
-                              subtitle: Text(item.primerApellido+' '+item.segundoApellido),
-                              //],
-                              //),
+                              subtitle: Text("${item.primerApellido}  ${item.segundoApellido}"),
 
                               trailing: Checkbox(
                                 onChanged: (bool value) {
