@@ -194,8 +194,8 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
       _documento = widget.actual.documento;
       //TODO Crear una vista que incluya las descripciones de los campos con el mismo nombre
-      _tipo = widget.actual.tipo.toString(); // widget.actual.descPuntoVenta;
-      _clasificacion = widget.actual.clasificacion.toString();
+      _tipo = widget.actual.descTipo; // widget.actual.descPuntoVenta;
+      _clasificacion = widget.actual.descClasificacion;
       _auxiliar = widget.actual.auxiliar;
       _id.text = widget.actual.identificacion.toString();
       _nombres.text =

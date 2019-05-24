@@ -1986,26 +1986,28 @@ class DBProvider {
             "from poliza pl, g_auxiliar xl, clase cl "
             "where pl.afianzado = xl.auxiliar and pl.objeto = cl.clase "
           );
-/*
+
          await db.execute(
              "create view v_auxiliar as "
-                 "select au.auxiliar, au.clasificacion, cl.descripcion as descClasificacion, au.tipo, tp.descripcion as descTipo, au.identificacion, au.fecha, au.password, "
-                 "au.token, au.primerNombre, au.segundoNombre, au.primerApellido, au.segundoApellido,"
-                 "au.favorito, au.foto, au.nacimiento, au.lugar, lg.descripcion as descLugar, au.genero, ge.descripcion as descGenero, au.estadoCivil, ec.descripcion as descEstadoCivil, au.direccion,"
-                 "au.municipio, mn.descripcion as descMunicipio, au.movil, au.fijo, au.correo, au.documento, au.sincronizar"
-                 "from g_auxiliar au, g_registro cl, g_registro tp, g_registro ge, g_registro ec, g_registro lg, g_registro mn"
+                 "select au.auxiliar, au.clasificacion, cl.descripcion as descClasificacion, au.tipo, "
+                 "tp.descripcion as descTipo, au.identificacion, au.fecha, au.password, au.token, au.primerNombre, "
+                 "au.segundoNombre, au.primerApellido, au.segundoApellido, au.favorito, au.foto, au.nacimiento, "
+                 "au.lugar, lg.descripcion as descLugar, au.genero, ge.descripcion as descGenero, au.estadoCivil, "
+                 "ec.descripcion as descEstadoCivil, au.direccion, au.municipio, mn.descripcion as descMunicipio, "
+                 "au.movil, au.fijo, au.correo, au.documento, au.sincronizar "
+                 "from g_auxiliar au, g_registro cl, g_registro tp, g_registro ge, g_registro ec, g_registro lg, g_registro mn "
                  "where au.clasificacion = cl.registro and "
-                 "au.tipo = tp.registro and"
-                 "au.genero = ge.registro and"
-                 "au.estadoCivil = ec.registro and"
-                 "au.lugar = lg.registro and"
+                 "au.tipo = tp.registro and "
+                 "au.genero = ge.registro and "
+                 "au.estadoCivil = ec.registro and "
+                 "au.lugar = lg.registro and "
                  "au.municipio = mn.registro"
 
                  //Falta incluir la descripción de los campos parametricos
 
                  //"where pl.afianzado = xl.auxiliar and pl.objeto = cl.clase "
          );
-*/
+
           print('Creación vistas...');
 
         });
@@ -2129,7 +2131,7 @@ class DBProvider {
   //TODO crear una vista de g_auxiliar para traer las descripciones
   Future<List<Auxiliar>> getAllAuxiliar() async {
     final db = await database;
-    var consulta = await db.query("g_auxiliar order by tipo, auxiliar");
+    var consulta = await db.query("v_auxiliar order by tipo, auxiliar");
     List<Auxiliar> list =
     consulta.isNotEmpty ? consulta.map((c) => Auxiliar.fromMap(c)).toList() : [];
     return list;
