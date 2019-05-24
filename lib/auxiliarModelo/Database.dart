@@ -2091,6 +2091,12 @@ class DBProvider {
         where: "auxiliar = ?", whereArgs: [registro.auxiliar]);
     return crud;
 
+//    select para traer las descripcionnes
+
+//    mete objeto
+
+//    envia firebase
+
     // Falta actualizar lo de ROL, cuando pase lo de los combos
   }
 
