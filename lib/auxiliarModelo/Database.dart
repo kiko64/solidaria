@@ -2052,7 +2052,34 @@ class DBProvider {
     int id = consulta.first["id"];
     print('Último auxiliar: '+id.toString());
 
+    String sentencia = 'SELECT ge.clasificacion, ge.tipo, ge.identificacion, ge.fecha, ge.password, ge.token, '
+    'ge.primerNombre, ge.segundoNombre, ge.primerApellido, ge.segundoApellido, ge.favorito, '
+    'ge.foto, ge.nacimiento, ge.lugar, ge.genero, ge.estadoCivil, '
+    'ge.direccion, ge.municipio, ge.movil, ge.fijo, ge.correo, ge.documento, ge.sincronizar, '
+    'cla.descripcion AS claDescripcion, tip.descripcion AS tipDescripcion, lug.descripcion AS lugDescripcion, '
+    'gen.descripcion AS genDescripcion, est.descripcion AS estDescripcion, mun.descripcion AS munDescripcion  '
+    'FROM g_auxiliar ge, g_registro cla, g_registro tip, g_registro lug, g_registro gen, g_registro est, g_registro mun  '
+    'WHERE ge.clasificacion = cla.registro AND ge.tipo = tip.registro AND ge.lugar = lug.registro '
+    'AND   ge.genero = gen.registro AND ge.estadoCivil = est.registro AND ge.municipio = mun.registro '
+    'AND  ge.auxiliar = '+id.toString();
+
+    objetoAuxilar(sentencia);
     return crud;
+  }
+
+  objetoAuxilar(String sentencia) async {
+
+    final db = await database;
+    var consulta = await db.rawQuery(sentencia);                                // Crear Cursor para sacar los Datos
+    try {
+      for (int i = 0; i < consulta.length; i++) {
+        AuxiliarFb rs = AuxiliarFb.map(consulta[i]);
+
+//        String cadena= auxiliarFbToJson(AuxiliarFb);
+
+      }
+    } on DatabaseException catch (e) { print('native_error: $e'); }
+    print("Objeto: "+ sentencia);
   }
 
   updateAuxiliar(Auxiliar registro) async {
