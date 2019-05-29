@@ -601,3 +601,179 @@ class Documento {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+
+AuxiliarFb auxiliarFbFromJson(String str) {
+  final jsonData = json.decode(str);
+  return AuxiliarFb.fromMap(jsonData);
+}
+
+String auxiliarFbToJson(AuxiliarFb data) {
+  final dyn = data.toMap();
+  return json.encode(dyn);
+}
+
+class AuxiliarFb {
+  int auxiliar;
+  int clasificacion;
+  String claDescripcion;
+  int tipo;
+  String tipDescripcion;
+  int identificacion;
+  String primerNombre;
+  String segundoNombre;
+  String primerApellido;
+  String segundoApellido;
+  String favorito;
+
+  String foto;
+  String nacimiento;
+  int lugar;
+  String lugDescripcion;
+  int genero;
+  String genDescripcion;
+  int estadoCivil;
+  String estDescripcion;
+
+  String direccion;
+  int municipio;
+  String munDescripcion;
+  String movil;
+  String fijo;
+  String correo;
+
+  String documento;
+  bool sincronizar;
+
+  AuxiliarFb({
+    this.auxiliar,
+    this.clasificacion,
+    this.claDescripcion,
+    this.tipo,
+    this.tipDescripcion,
+    this.identificacion,
+    this.primerNombre,
+    this.segundoNombre,
+    this.primerApellido,
+    this.segundoApellido,
+    this.favorito,
+
+    this.foto,
+    this.nacimiento,
+    this.lugar,
+    this.lugDescripcion,
+    this.genero,
+    this.genDescripcion,
+    this.estadoCivil,
+    this.estDescripcion,
+
+    this.direccion,
+    this.municipio,
+    this.munDescripcion,
+    this.movil,
+    this.fijo,
+    this.correo,
+
+    this.documento,
+    this.sincronizar,
+  });
+
+
+  factory AuxiliarFb.fromMap(Map<String, dynamic> json) => new AuxiliarFb(
+    auxiliar: json["auxiliar"],
+    clasificacion: json["clasificacion"],
+    claDescripcion: json["claDescripcion"],
+    tipo: json["tipo"],
+    tipDescripcion: json["tipDescripcion"],
+    identificacion: json["identificacion"],
+    primerNombre: json["primerNombre"],
+    segundoNombre: json["segundoNombre"],
+    primerApellido: json["primerApellido"],
+    segundoApellido: json["segundoApellido"],
+    favorito: json["favorito"],
+
+    foto: json["foto"],
+    nacimiento: json["nacimiento"],
+    lugar: json["lugar"],
+    lugDescripcion: json["lugDescripcion"],
+    genero: json["genero"],
+    genDescripcion: json["genDescripcion"],
+    estadoCivil: json["estadoCivil"],
+    estDescripcion: json["estDescripcion"],
+
+    direccion: json["direccion"],
+    municipio: json["municipio"],
+    munDescripcion: json["munDescripcion"],
+    movil: json["movil"],
+    fijo: json["fijo"],
+    correo: json["correo"],
+
+    documento: json["documento"],
+    sincronizar: json["sincronizar"]==1,
+  );
+
+  AuxiliarFb.map(dynamic obj) {
+    this.auxiliar = obj["auxiliar "];
+    this.clasificacion = obj["clasificacion "];
+    this.claDescripcion = obj["claDescripcion "];
+    this.tipo = obj["tipo "];
+    this.tipDescripcion = obj["tipDescripcion "];
+    this.identificacion = obj["identificacion "];
+    this.primerNombre = obj["primerNombre "];
+    this.segundoNombre = obj["segundoNombre "];
+    this.primerApellido = obj["primerApellido "];
+    this.segundoApellido = obj["segundoApellido "];
+    this.favorito = obj["favorito "];
+
+    this.foto = obj["foto "];
+    this.nacimiento = obj["nacimiento "];
+    this.lugar = obj["lugar "];
+    this.lugDescripcion = obj["lugDescripcion "];
+    this.genero = obj["genero "];
+    this.genDescripcion = obj["genDescripcion "];
+    this.estadoCivil = obj["estadoCivil "];
+    this.estDescripcion = obj["estDescripcion "];
+
+    this.direccion = obj["direccion "];
+    this.municipio = obj["municipio "];
+    this.munDescripcion = obj["munDescripcion "];
+    this.movil = obj["movil "];
+    this.fijo = obj["fijo "];
+    this.correo = obj["correo "];
+
+    this.documento = obj["documento "];
+    this.sincronizar = obj["sincronizar"]==1;
+  }
+
+  Map<String, dynamic> toMap() => {
+    "clasificacion": clasificacion,
+    "claDescripcion": claDescripcion,
+    "tipo": tipo,
+    "tipDescripcion": tipDescripcion,
+    "auxiliar": auxiliar,
+    "identificacion": identificacion,
+    "primerNombre": primerNombre,
+    "segundoNombre": segundoNombre,
+    "primerApellido": primerApellido,
+    "segundoApellido": segundoApellido,
+    "favorito": favorito,
+
+    "foto": foto,
+    "nacimiento": nacimiento,
+    "lugar": lugar,
+    "lugDescripcion": lugDescripcion,
+    "genero": genero,
+    "genDescripcion": genDescripcion,
+    "estadoCivil": estadoCivil,
+    "estDescripcion": estDescripcion,
+
+    "direccion": direccion,
+    "municipio":  municipio,
+    "munDescripcion": munDescripcion,
+    "movil": movil,
+    "fijo": fijo,
+    "correo": correo,
+    "documento": documento,
+  };
+}
