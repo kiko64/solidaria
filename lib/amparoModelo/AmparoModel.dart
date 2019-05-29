@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-Amparo amparoFromJson(String str) {
+Amparo amparoFromJson(String str) {                                             // DesSerialización 	--> 	Recuperar Datos
+
   final jsonData = json.decode(str);
   return Amparo.fromMap(jsonData);
 }
 
-String amparoToJson(Amparo data) {
+String amparoToJson(Amparo data) {                                              // Serialización 		--> 	Escribir Datos
   final dyn = data.toMap();
   return json.encode(dyn);
 }

@@ -117,6 +117,8 @@ class DBAmparo {
         prima: registro.prima
     );
 
+    amparoToJson(sincronizar);
+
     var crud = await db.update("amparo", sincronizar.toMap(),
         where: "amparo = ?", whereArgs: [registro.amparo]);
 

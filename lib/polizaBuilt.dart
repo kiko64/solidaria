@@ -27,6 +27,7 @@ abstract class PolizaBuilt implements Built<PolizaBuilt, PolizaBuiltBuilder> {
   String get estado;
 
   @nullable
+
   BuiltList<int> get intemediarios;
 
   double get comision;
