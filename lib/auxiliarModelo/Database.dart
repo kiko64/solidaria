@@ -2061,7 +2061,7 @@ class DBProvider {
     'FROM g_auxiliar ge, g_registro cla, g_registro tip, g_registro lug, g_registro gen, g_registro est, g_registro mun  '
     'WHERE ge.clasificacion = cla.registro AND ge.tipo = tip.registro AND ge.lugar = lug.registro '
     'AND   ge.genero = gen.registro AND ge.estadoCivil = est.registro AND ge.municipio = mun.registro '
-    'AND  ge.auxiliar = '+id.toString();
+    'AND  ge.auxiliar = '+id.toString();                                        // Consulta que saca los datos
 
     objetoAuxilar(sentencia);
     return crud;
@@ -2070,12 +2070,12 @@ class DBProvider {
   objetoAuxilar(String sentencia) async {
 
     final db = await database;
-    var consulta = await db.rawQuery(sentencia);                                // Crear Cursor para sacar los Datos
+    var consulta = await db.rawQuery(sentencia);                                // llama la consulta
     try {
       for (int i = 0; i < consulta.length; i++) {
-        AuxiliarFb rs = AuxiliarFb.map(consulta[i]);
+        AuxiliarFb rs = AuxiliarFb.map(consulta[i]);                            //Carga los datos
 
-//        String cadena= auxiliarFbToJson(AuxiliarFb);
+//        String cadena= auxiliarFbToJson(AuxiliarFb);                          // Ya estan en el objeto AuxiliarFb para guardarlo
 
       }
     } on DatabaseException catch (e) { print('native_error: $e'); }
