@@ -13,7 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:emision/auxiliarModelo/AuxiliarModel.dart';
@@ -25,6 +27,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sqflite/sqflite.dart';          // fixCombo (16 feb 2019): new variable
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'auxiliarModelo/fireDatabase.dart';
+
 
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();
@@ -68,7 +72,10 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
   AutoCompleteTextField searchTextField;
 
-
+  //Se crea la instancia
+  final FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference gAuxRef;
+  DatabaseReference rootRef;
 
 
 
@@ -119,6 +126,12 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
   @override
   void initState() {
+
+    gAuxRef = database.reference().child("g_auxiliar");
+
+    //Root ref
+    rootRef = database.reference();
+
     if(widget.actual==null) { // Manejo DB es Insertar
       print('I N S E R T ...');
       _auxiliar = 0;
@@ -129,8 +142,8 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
       print('U P D A T E ...');
       _auxiliar       = widget.actual.auxiliar;
       _id.text        = widget.actual.identificacion.toString();
-      _nombres.text   = widget.actual.primerNombre+' '+widget.actual.segundoNombre;
-      _apellidos.text = widget.actual.primerApellido+' '+widget.actual.segundoApellido;
+      _nombres.text   = widget.actual.primerNombre; //+' '+widget.actual.segundoNombre;
+      _apellidos.text = widget.actual.primerApellido; //+' '+widget.actual.segundoApellido;
       _favorito.text  = widget.actual.favorito;
 
       if (widget.actual.foto.toString() != 'assets/person.jpg') {
@@ -678,6 +691,13 @@ class _AuxiliarPageState extends State<AuxiliarPage> {
 
                 if(widget.actual==null) {               // Manejo DB Insertar
                   bloc.add(rnd);
+                  firebaseDatabase.fnCreate("PruebaDomingo", rnd.toMap());
+                  //gAuxRef.child(rnd.identificacion.toString()).set(jsonDecode(auxiliarToJson(rnd)));
+                  /*
+                  for(int i = 0; i<10;i++ ){
+                    gAuxRef.child(rnd.identificacion.toString()).child(i.toString()).set("hola $i");
+                  }
+                  */
                 }
                 else {                                  // Manejo DB Actualizar
                   bloc.update(rnd);

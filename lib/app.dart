@@ -16,6 +16,7 @@ import 'package:emision/amparos.dart';
 import 'package:emision/inicio.dart';
 import 'package:emision/polizaPagination.dart';
 import 'package:emision/polizas.dart';
+import 'package:emision/pruebaCrudFB.dart';
 import 'package:emision/ventanaDatos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';                     //new
@@ -45,6 +46,7 @@ class SeguridadApp extends StatelessWidget {
         '/auxiliares'  : (BuildContext context) => AuxiliarList(),
         '/amparos'   : (BuildContext context) => AmparoList(0),
         '/gregistro' : (BuildContext context) => VentanaGRegistro(actual: null),
+        '/crudFB' : (BuildContext context) => ventanaCrud(),
       },
 //    home: PolizaList(),                                   // (Verificar)
 //    home: AccionList(),                                   // (Verificar)

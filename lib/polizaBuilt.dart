@@ -12,56 +12,79 @@ part 'polizaBuilt.g.dart';
 abstract class PolizaBuilt implements Built<PolizaBuilt, PolizaBuiltBuilder> {
   static Serializer<PolizaBuilt> get serializer => _$polizaBuiltSerializer;
 
+  @nullable
   int get poliza;
 
+  @nullable
   String get sede;
 
+  @nullable
   String get fechaEmision;
 
+  @nullable
   int get periodo;
 
+  @nullable
   int get numero;
 
+  @nullable
   int get temporario;
 
+  @nullable
   String get estado;
 
   @nullable
   BuiltList<int> get intemediarios;
 
+  @nullable
   double get comision;
 
+  @nullable
   int get cupo_operativo;
 
+  @nullable
   String get afianzado;
 
+  @nullable
   String get tipoPoliza;
 
+  @nullable
   String get clausulado;
 
+  @nullable
   int get periodoEmision;
 
+  @nullable
   int get retroactividad;
 
+  @nullable
   String get fechaHoraInicial;
 
+  @nullable
   String get fechaHoraFinal;
 
+  @nullable
   String get contratante;
 
+  @nullable
   String get objeto;
 
+  @nullable
   String get numeroContrato;
 
+  @nullable
   double get valorContrato;
 
+  @nullable
   String get fechaInicial;
 
+  @nullable
   String get fechaFinal;
 
   @nullable
   BuiltList<int> get amparos;
 
+  @nullable
   int get sincronizar;
 
   /* Objects are defined like this:
@@ -87,3 +110,5 @@ String polizaJson(PolizaBuilt objPoliza){
   final json  = jsonEncode(standardSerializers.serialize(objPoliza));
   return json;
 }
+
+

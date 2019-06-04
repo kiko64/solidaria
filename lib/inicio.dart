@@ -20,7 +20,9 @@ class PaginaInicio extends StatelessWidget {
     menuRoute("Conocimiento Cliente", '/auxiliares',
         Icon(Icons.people, size: 60.0, color: amarilloSolidaria1)),
     menuRoute("g_Registro", '/gregistro',
-        Icon(Icons.ac_unit, size: 60.0, color: amarilloSolidaria1))
+        Icon(Icons.ac_unit, size: 60.0, color: amarilloSolidaria1)),
+    menuRoute("CRUD firebase", '/crudFB',
+        Icon(Icons.check_circle, size: 60.0, color: amarilloSolidaria1))
   ];
 
   @override

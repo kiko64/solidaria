@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
 import 'dart:io';
+import 'package:emision/polizaBuilt.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -137,6 +140,13 @@ class _PolizaPageState extends State<PolizaPage> {
 
   final bloc = PolizaBloc();  // Manejo DB
 
+
+  //Se crea la instancia
+  final FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference polizaRef;
+  DatabaseReference rootRef;
+
+
   final formats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
     InputType.date: DateFormat('dd-MM-yyyy'),
@@ -161,6 +171,13 @@ class _PolizaPageState extends State<PolizaPage> {
 
   @override
   void initState() {
+
+    polizaRef = database.reference().child("polizas");
+
+    //Root ref
+    rootRef = database.reference();
+
+
     if(widget.actual==null) {                                 // Manejo DB es Insertar
       print('I N S E R T ...');
 
@@ -799,8 +816,49 @@ class _PolizaPageState extends State<PolizaPage> {
                       sincronizar:      0
                   );
 
-                  if(widget.actual==null) {                 // Manejo DB Insertar
-                    bloc.add(ctv);
+                  PolizaBuilt ctv1 = PolizaBuilt ((b)=>b
+                    ..poliza =            _poliza
+                    ..sede  =            sede.descripcion
+                    ..cupo_operativo=   int.parse(_cupoOperativo.text)
+                    ..afianzado=        afianzado.registro.toString() //TODO cambiear a entero
+                    ..comision=         double.parse(_comision.text)
+                    ..fechaEmision=      fechaEmision.toString()
+
+                    ..numero=           int.parse(_numero.text)
+                    ..temporario=       int.parse(_temporario.text)
+                    ..estado=           estado.registro.toString()  //TODO cambiar en polizaBuilt a entero
+                    ..periodo=          int.parse(_periodo.text)
+
+                    ..objeto=           _objeto.toString()
+                    ..tipoPoliza =      tipoPoliza.descripcion
+                    ..clausulado=       _clausulado.text
+
+                    ..retroactividad=   int.parse(_retroactividad.text)
+                    ..periodoEmision=  int.parse(_periodoEmision.text)
+                    ..fechaHoraInicial= fechaHoraInicial.toString()
+                    ..fechaHoraFinal=  fechaHoraFinal.toString()
+
+                    ..contratante=     contratante.registro.toString()  //TODO cambiar a entero
+                    ..numeroContrato=  _numeroContrato.text
+                    ..valorContrato=   double.parse(_valorContrato.text)
+                    ..fechaInicial=    fechaInicial.toString()
+                    ..fechaFinal=      fechaFinal.toString()
+
+                    ..sincronizar=      0
+                  );
+
+                  if(widget.actual==null) {
+                    //Primer ejemplo de funcionamiento de los serializadores
+                    var prueba = jsonDecode(polizaJson(ctv1));
+                    PolizaBuilt prueba1 = parsePoliza(polizaJson(ctv1));
+                    print("Json file: $prueba");
+                    print("Sede desde json: ${prueba['sede']}");
+                    print("Sede desde objeto: ${prueba1.sede}");
+                    //polizaRef.child(ctv1.poliza.toString()).set(prueba);
+
+                    polizaRef.child(ctv1.poliza.toString()).set(jsonDecode(polizaToJson(ctv)));
+
+                    bloc.add(ctv);    // Manejo DB Insertar
                   }
                   else {                                    // Manejo DB Actualizar
                     bloc.update(ctv);
